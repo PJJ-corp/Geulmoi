@@ -13,7 +13,7 @@ extension Project {
                                      dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
         targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, platform: platform) })
         return Project(name: name,
-                       organizationName: "tuist.io",
+                       organizationName: "geulmoi",
                        targets: targets)
     }
 
@@ -55,9 +55,10 @@ extension Project {
             platform: platform,
             product: .app,
             bundleId: "com.geulmoi.pjj",
+            deploymentTarget: .iOS(targetVersion: "14.0", devices: [.iphone]),
             infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["Targets/\(name)/Sources/**"],
-            resources: ["Targets/\(name)/Resources/**"],
+            sources: ["Sources/**"],
+            resources: ["Resources/**"],
             dependencies: dependencies
         )
 
@@ -67,7 +68,7 @@ extension Project {
             product: .unitTests,
             bundleId: "com.geulmoi.pjj",
             infoPlist: .default,
-            sources: ["Targets/\(name)/Tests/**"],
+            sources: ["Tests/**"],
             dependencies: [
                 .target(name: "\(name)")
         ])
