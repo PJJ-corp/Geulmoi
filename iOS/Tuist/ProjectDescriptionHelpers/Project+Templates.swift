@@ -5,60 +5,49 @@ import ProjectDescription
 /// Create your own conventions, e.g: a func that makes sure all shared targets are "static frameworks"
 /// See https://docs.tuist.io/guides/helpers/
 
-extension Project {
-    
-    private static let organizationName: String = "team.pjj"
-    private static let bundleID: String = "com.geulmoi.pjj"
-    
-    public static func app(name: String,
-                           platform: Platform,
-                           iOSTargetVersion: String,
-                           infoPlist: [String: InfoPlist.Value],
-                           dependencies: [TargetDependency] = []) -> Project {
-        let targets = makeAppTargets(name: name,
-                                     platform: platform,
-                                     iOSTargetVersion: iOSTargetVersion,
-                                     infoPlist: infoPlist,
-                                     dependencies: dependencies)
-        return Project(name: name,
-                       organizationName: organizationName,
-                       targets: targets)
-    }
-    
-    public static func frameworkWithDemoApp(name: String,
-                                            platform: Platform,
-                                            iOSTargetVersion: String,
-                                            infoPlist: [String: InfoPlist.Value] = [:],
-                                            dependencies: [TargetDependency] = []) -> Project {
-        var targets = makeFrameworkTargets(name: name,
-                                           platform: platform,
-                                           iOSTargetVersion: iOSTargetVersion,
-                                           dependencies: dependencies)
-        targets.append(contentsOf: makeAppTargets(name: "\(name)DemoApp",
-                                                  platform: platform,
-                                                  iOSTargetVersion: iOSTargetVersion,
-                                                  infoPlist: infoPlist,
-                                                  dependencies: [.target(name: name)]))
-        
-        return Project(name: name,
-                       organizationName: organizationName,
-                       targets: targets)
-    }
-    
-    public static func framework(name: String,
-                                 platform: Platform, iOSTargetVersion: String,
-                                 dependencies: [TargetDependency] = []) -> Project {
-        let targets = makeFrameworkTargets(name: name,
-                                           platform: platform,
-                                           iOSTargetVersion: iOSTargetVersion,
-                                           dependencies: dependencies)
-        return Project(name: name,
-                       organizationName: organizationName,
-                       targets: targets)
-    }
+public enum Names {
+    public static let projectName: String = "Geulmoi"
+    public static let organizationName: String = "team.pjj"
+    public static let bundleID: String = "com.geulmoi.pjj"
 }
 
-private extension Project {
+public extension Project {
+    static func makeProject(name: String,
+                            product: Product,
+                            infoPlist: InfoPlist,
+                            dependencies: [TargetDependency]) -> Project {
+        let project: Project = .init(
+            name: Names.projectName,
+            organizationName: Names.organizationName,
+            targets: [
+                Target(
+                    name: name,
+                    platform: .iOS,
+                    product: product,
+                    bundleId: Names.bundleID,
+                    deploymentTarget: .iOS(targetVersion: "14.0", devices: [.iphone]),
+                    infoPlist: infoPlist,
+                    sources: ["Sources/**"],
+                    resources: ["Resources/**"],
+                    dependencies: dependencies
+                ),
+                Target(
+                    name: "\(name)Tests",
+                    platform: .iOS,
+                    product: .unitTests,
+                    bundleId: Names.bundleID,
+                    infoPlist: .default,
+                    sources: ["Tests/**"],
+                    dependencies: [
+                        .target(name: name)
+                    ]
+                )
+            ]
+        )
+
+        return project
+    }
+    
     /// Helper function to create a framework target and an associated unit test target
     static func makeFrameworkTargets(name: String,
                                      platform: Platform,
