@@ -6,25 +6,69 @@ import ProjectDescription
 /// See https://docs.tuist.io/guides/helpers/
 
 extension Project {
-    /// Helper function to create the Project for this ExampleApp
-    public static func app(name: String, platform: Platform, additionalTargets: [String]) -> Project {
-        var targets = makeAppTargets(name: name,
+    
+    private static let organizationName: String = "team.pjj"
+    private static let bundleID: String = "com.geulmoi.pjj"
+    
+    public static func app(name: String,
+                           platform: Platform,
+                           iOSTargetVersion: String,
+                           infoPlist: [String: InfoPlist.Value],
+                           dependencies: [TargetDependency] = []) -> Project {
+        let targets = makeAppTargets(name: name,
                                      platform: platform,
-                                     dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
-        targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, platform: platform) })
+                                     iOSTargetVersion: iOSTargetVersion,
+                                     infoPlist: infoPlist,
+                                     dependencies: dependencies)
         return Project(name: name,
-                       organizationName: "geulmoi",
+                       organizationName: organizationName,
                        targets: targets)
     }
+    
+    public static func frameworkWithDemoApp(name: String,
+                                            platform: Platform,
+                                            iOSTargetVersion: String,
+                                            infoPlist: [String: InfoPlist.Value] = [:],
+                                            dependencies: [TargetDependency] = []) -> Project {
+        var targets = makeFrameworkTargets(name: name,
+                                           platform: platform,
+                                           iOSTargetVersion: iOSTargetVersion,
+                                           dependencies: dependencies)
+        targets.append(contentsOf: makeAppTargets(name: "\(name)DemoApp",
+                                                  platform: platform,
+                                                  iOSTargetVersion: iOSTargetVersion,
+                                                  infoPlist: infoPlist,
+                                                  dependencies: [.target(name: name)]))
+        
+        return Project(name: name,
+                       organizationName: organizationName,
+                       targets: targets)
+    }
+    
+    public static func framework(name: String,
+                                 platform: Platform, iOSTargetVersion: String,
+                                 dependencies: [TargetDependency] = []) -> Project {
+        let targets = makeFrameworkTargets(name: name,
+                                           platform: platform,
+                                           iOSTargetVersion: iOSTargetVersion,
+                                           dependencies: dependencies)
+        return Project(name: name,
+                       organizationName: organizationName,
+                       targets: targets)
+    }
+}
 
-    // MARK: - Private
-
+private extension Project {
     /// Helper function to create a framework target and an associated unit test target
-    private static func makeFrameworkTargets(name: String, platform: Platform) -> [Target] {
+    static func makeFrameworkTargets(name: String,
+                                     platform: Platform,
+                                     iOSTargetVersion: String,
+                                     infoPlist: [String: InfoPlist.Value] = [:],
+                                     dependencies: [TargetDependency]) -> [Target] {
         let sources = Target(name: name,
                 platform: platform,
                 product: .framework,
-                bundleId: "com.geulmoi.pjj",
+                bundleId: "io.tuist.\(name)",
                 infoPlist: .default,
                 sources: ["Targets/\(name)/Sources/**"],
                 resources: [],
@@ -32,7 +76,7 @@ extension Project {
         let tests = Target(name: "\(name)Tests",
                 platform: platform,
                 product: .unitTests,
-                bundleId: "com.geulmoi.pjj",
+                bundleId: "io.tuist.\(name)Tests",
                 infoPlist: .default,
                 sources: ["Targets/\(name)/Tests/**"],
                 resources: [],
@@ -41,7 +85,11 @@ extension Project {
     }
 
     /// Helper function to create the application target and the unit test target.
-    private static func makeAppTargets(name: String, platform: Platform, dependencies: [TargetDependency]) -> [Target] {
+    static func makeAppTargets(name: String,
+                               platform: Platform,
+                               iOSTargetVersion: String,
+                               infoPlist: [String: InfoPlist.Value],
+                               dependencies: [TargetDependency]) -> [Target] {
         let platform: Platform = platform
         let infoPlist: [String: InfoPlist.Value] = [
             "CFBundleShortVersionString": "1.0",
@@ -54,11 +102,10 @@ extension Project {
             name: name,
             platform: platform,
             product: .app,
-            bundleId: "com.geulmoi.pjj",
-            deploymentTarget: .iOS(targetVersion: "14.0", devices: [.iphone]),
+            bundleId: "io.tuist.\(name)",
             infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["Sources/**"],
-            resources: ["Resources/**"],
+            sources: ["Targets/\(name)/Sources/**"],
+            resources: ["Targets/\(name)/Resources/**"],
             dependencies: dependencies
         )
 
@@ -66,9 +113,9 @@ extension Project {
             name: "\(name)Tests",
             platform: platform,
             product: .unitTests,
-            bundleId: "com.geulmoi.pjj",
+            bundleId: "io.tuist.\(name)Tests",
             infoPlist: .default,
-            sources: ["Tests/**"],
+            sources: ["Targets/\(name)/Tests/**"],
             dependencies: [
                 .target(name: "\(name)")
         ])

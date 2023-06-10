@@ -1,17 +1,17 @@
 //
 //  Workspace.swift
-//  iOSManifests
+//  Config
 //
 //  Created by juntaek.oh on 2023/06/10.
 //
 
-import Foundation
 import ProjectDescription
 
-let workspaceName: String = "Geulmoi"
+let appName: String = "Geulmoi"
 
 let workspace: Workspace = .init(
-    name: workspaceName,
+    name: appName,
     projects: [
         "Projects/Geulmoi"
-    ])
+    ]
+)
