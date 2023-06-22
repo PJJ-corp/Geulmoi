@@ -8,7 +8,14 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.makeProject(name: Names.projectName,
-                                  product: .app,
-                                  infoPlist: .file(path: "Attributes/Info.plist"),
-                                  dependencies: [.SPM.RxSwift.dependency])
+let project = Project.makeProject(
+    name: Constants.projectName,
+    product: .app,
+    infoPlist: .file(path: "Attributes/Info.plist"),
+    packages: [],
+    dependencies: [
+        .SPM.RxSwift.dependency,
+        .Module.type(.shared(subModule: .example)).dependency
+    ],
+    resources: ["Resources/**"]
+)
