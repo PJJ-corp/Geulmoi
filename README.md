@@ -7,7 +7,7 @@ GEUL·MO·E
 # Developer
 |황지희(Jee.e)|Zeto|junu|
 |---|---|---|
-|https://github.com/Jeeehee|https://github.com/wnsxor1993|https://github.com/wnsxor1993|https://github.com/junu0516|
+|https://github.com/Jeeehee|https://github.com/wnsxor1993|https://github.com/junu0516|
 
 <br>
 
