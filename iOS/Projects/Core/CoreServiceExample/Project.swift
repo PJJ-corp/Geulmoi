@@ -13,5 +13,5 @@ let project: Project = .makeProject(
     product: .framework,
     packages: [],
     dependencies: [.SPM.RxSwift.dependency],
-    hasTests: true
+    hasTests: false
 )

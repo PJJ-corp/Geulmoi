@@ -16,5 +16,5 @@ let project: Project = .makeProject(
         .SPM.RxSwift.dependency,
         .Module.type(.core(subModule: .service)).dependency
     ],
-    hasTests: true
+    hasTests: false
 )

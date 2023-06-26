@@ -21,9 +21,9 @@ public enum CoreModoule: CaseIterable, ModuleInterface {
     public var name: String {
         switch self {
         case .manager:
-            return "Manager"
+            return "CoreManagerExample"
         case .service:
-            return "Service"
+            return "CoreServiceExample"
         case .storage:
             return "Storage"
         case .network:
