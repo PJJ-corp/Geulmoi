@@ -15,6 +15,7 @@ let project = Project.makeProject(
     packages: [],
     dependencies: [
         .SPM.RxSwift.dependency,
+        .Module.type(.core(subModule: .manager)).dependency,
         .Module.type(.shared(subModule: .example)).dependency
     ],
     resources: ["Resources/**"]
