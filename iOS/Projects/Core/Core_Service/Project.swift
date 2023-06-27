@@ -2,7 +2,7 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by juntaek.oh on 2023/06/26.
+//  Created by juntaek.oh on 2023/06/27.
 //
 
 import ProjectDescription
@@ -12,6 +12,8 @@ let project: Project = .makeProject(
     name: Modules.core(subModule: .service).name,
     product: .framework,
     packages: [],
-    dependencies: [.SPM.RxSwift.dependency],
+    dependencies: [
+        .SPM.RxSwift.dependency
+    ],
     hasTests: false
 )
