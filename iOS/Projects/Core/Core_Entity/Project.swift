@@ -9,12 +9,9 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = .makeProject(
-    name: Modules.core(subModule: .service).name,
+    name: Modules.core(subModule: .entity).name,
     product: .framework,
     packages: [],
-    dependencies: [
-        .SPM.RxSwift.dependency,
-        .Module.type(.core(subModule: .extensions)).dependency
-    ],
+    dependencies: [],
     hasTests: false
 )
