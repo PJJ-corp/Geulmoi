@@ -13,12 +13,7 @@ let project: Project = .makeProject(
     product: .framework,
     packages: [],
     dependencies: [
-        .SPM.RxSwift.dependency,
-        .Module.type(.core(subModule: .service)).dependency,
-        .Module.type(.core(subModule: .network)).dependency,
-        .Module.type(.core(subModule: .storage)).dependency,
-        .Module.type(.core(subModule: .entity)).dependency,
-        .Module.type(.core(subModule: .extensions)).dependency
+        .SPM.RxSwift.dependency
     ],
     hasTests: false
 )
