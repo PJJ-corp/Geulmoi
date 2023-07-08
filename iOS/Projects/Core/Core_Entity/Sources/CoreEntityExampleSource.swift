@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Core_Service
 
 struct SomeStruct {
     
