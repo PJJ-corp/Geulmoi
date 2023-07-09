@@ -9,14 +9,14 @@ import Foundation
 
 public enum Modules {
     
-    case feature(subModule: FeatureModule)
+    case feature(subModule: FeatureModule, layerModule: FeatureSubModule)
     case core(subModule: CoreModoule)
     case shared(subModule: SharedModule)
     
     public var name: String {
         switch self {
-        case .feature(let subModule):
-            return subModule.name
+        case .feature(_, let layerModule):
+            return layerModule.type
         case .core(let subModule):
             return subModule.name
         case .shared(let subModule):
@@ -26,8 +26,8 @@ public enum Modules {
     
     public var path: String {
         switch self {
-        case .feature(let subModule):
-            return subModule.path
+        case .feature(let subModule, let layerModule):
+            return subModule.path + layerModule.type
         case .core(let subModule):
             return subModule.path
         case .shared(let subModule):

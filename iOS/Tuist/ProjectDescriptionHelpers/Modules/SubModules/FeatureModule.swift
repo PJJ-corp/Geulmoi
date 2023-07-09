@@ -7,18 +7,35 @@
 
 import Foundation
 
-public enum FeatureModule: CaseIterable, ModuleInterface {
-    
-    case home
+public enum FeatureModule: String, ModuleInterface {
+
+    case Home
     
     public var name: String {
+        return "\(self)"
+    }
+
+    public var path: String {
         switch self {
-        case .home:
-            return "Home"
+        case .Home:
+            return "Projects/Feature/Feature\(name)/"
         }
     }
-    
-    public var path: String {
-        ""
+
+}
+
+// MARK: - FeatureSubModule
+
+public enum FeatureSubModule {
+
+    case DIContainer
+    case Coordinator
+    case Presentation
+    case UseCase
+    case Repository
+
+    var type: String {
+        return "\(self)"
     }
+
 }
