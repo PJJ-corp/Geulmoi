@@ -7,29 +7,34 @@
 
 import Foundation
 
-public enum FeatureModule: String, ModuleInterface {
+public enum FeatureModule: CaseIterable, ModuleInterface {
 
     case Home
     
     public var name: String {
         switch self {
         case .Home:
-            return "Home"
+            return "\(self)"
         }
     }
 
     public var path: String {
-        switch self {
-        case .Home:
-            return "Projects/Feature/Feature\(name)/\(name)"
-        }
+        return featurePath + "\(name)/\(name)"
+    }
+    
+    public var subModules: [FeatureSubModule] {
+        return FeatureSubModule.allCases
     }
 
 }
 
+// MARK: - FeaturePath
+
+private let featurePath = "Projects/Feature/Feature"
+
 // MARK: - FeatureSubModule
 
-public enum FeatureSubModule: CustomStringConvertible {
+public enum FeatureSubModule: CaseIterable {
 
     case DIContainer
     case Coordinator
@@ -38,22 +43,7 @@ public enum FeatureSubModule: CustomStringConvertible {
     case Repository
 
     var type: String {
-        return "\(self.description)"
+        return "\(self)"
     }
     
-    public var description: String {
-        switch self {
-        case .DIContainer:
-            return "DIContainer"
-        case .Coordinator:
-            return "Coordinator"
-        case .Presentation:
-            return "Presentation"
-        case .UseCase:
-            return "UseCase"
-        case .Repository:
-            return "Repository"
-        }
-    }
-
 }
