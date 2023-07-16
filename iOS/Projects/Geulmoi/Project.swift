@@ -15,7 +15,12 @@ let project = Project.makeProject(
     packages: [],
     dependencies: [
         .SPM.RxSwift.dependency,
-        .Module.type(.shared(subModule: .example)).dependency
+        .Module.type(.shared(subModule: .example)).dependency,
+        .Module.type(.feature(subModule: .Home, layerModule: .DIContainer)).dependency,
+        .Module.type(.feature(subModule: .Home, layerModule: .Coordinator)).dependency,
+        .Module.type(.feature(subModule: .Home, layerModule: .UseCase)).dependency,
+        .Module.type(.feature(subModule: .Home, layerModule: .Repository)).dependency,
+        .Module.type(.feature(subModule: .Home, layerModule: .Presentation)).dependency
     ],
     resources: ["Resources/**"]
 )

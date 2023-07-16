@@ -12,13 +12,16 @@ public enum FeatureModule: String, ModuleInterface {
     case Home
     
     public var name: String {
-        return "\(self)"
+        switch self {
+        case .Home:
+            return "Home"
+        }
     }
 
     public var path: String {
         switch self {
         case .Home:
-            return "Projects/Feature/Feature\(name)/"
+            return "Projects/Feature/Feature\(name)/\(name)"
         }
     }
 
@@ -26,7 +29,7 @@ public enum FeatureModule: String, ModuleInterface {
 
 // MARK: - FeatureSubModule
 
-public enum FeatureSubModule {
+public enum FeatureSubModule: CustomStringConvertible {
 
     case DIContainer
     case Coordinator
@@ -35,7 +38,22 @@ public enum FeatureSubModule {
     case Repository
 
     var type: String {
-        return "\(self)"
+        return "\(self.description)"
+    }
+    
+    public var description: String {
+        switch self {
+        case .DIContainer:
+            return "DIContainer"
+        case .Coordinator:
+            return "Coordinator"
+        case .Presentation:
+            return "Presentation"
+        case .UseCase:
+            return "UseCase"
+        case .Repository:
+            return "Repository"
+        }
     }
 
 }
