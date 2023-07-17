@@ -11,8 +11,8 @@ public enum Modules {
     
     case feature(subModule: FeatureModule)
     
-    case coreInterface(interfaceModule: CoreInterfaceModoule)
-    case core(subModule: CoreModoule)
+    case coreInterface(interfaceModule: CoreInterfaceModule)
+    case core(subModule: CoreModule)
     case shared(subModule: SharedModule)
     
     public var name: String {

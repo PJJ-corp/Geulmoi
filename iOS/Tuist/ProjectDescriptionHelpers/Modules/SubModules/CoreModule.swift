@@ -7,23 +7,23 @@
 
 import Foundation
 
-public enum CoreModoule: CaseIterable, ModuleInterface {
+public enum CoreModule: CaseIterable, ModuleInterface {
     
     case manager
-    case network
+    case service
     case storage
     case entity
     
     public var name: String {
         switch self {
         case .manager:
-            return "Core_Manager"
+            return "Manager"
         case .storage:
-            return "Core_Storage"
-        case .network:
-            return "Core_Network"
+            return "Storage"
+        case .service:
+            return "Service"
         case .entity:
-            return "Core_Entity"
+            return "Entity"
         }
     }
     

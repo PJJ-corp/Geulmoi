@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Core_Manager
 
 struct SomeStruct {
     

@@ -2,18 +2,20 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by juntaek.oh on 2023/06/27.
+//  Created by juntaek.oh on 2023/07/08.
 //
+
+import Foundation
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = .makeProject(
-    name: Modules.core(subModule: .network).name,
+    name: Modules.coreInterface(interfaceModule: .serviceInterface).name,
     product: .framework,
     packages: [],
     dependencies: [
-        .SPM.RxSwift.dependency
+        .Module.type(.core(subModule: .service)).dependency,
     ],
     hasTests: false
 )
