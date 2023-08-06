@@ -19,7 +19,7 @@ let project = Project.makeProject(
         .Module.type(.coreInterface(interfaceModule: .serviceInterface)).dependency,
         .Module.type(.coreInterface(interfaceModule: .storageInterface)).dependency,
         .Module.type(.coreInterface(interfaceModule: .entityInterface)).dependency,
-        .Module.type(.shared(subModule: .example)).dependency
+        .Module.type(.shared(subModule: .mvvmInterface)).dependency
     ],
     resources: ["Resources/**"]
 )
