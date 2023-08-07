@@ -14,8 +14,12 @@ let project = Project.makeProject(
     infoPlist: .file(path: "Attributes/Info.plist"),
     packages: [],
     dependencies: [
-        .SPM.RxSwift.dependency
-    ] +
-    TargetDependency.Module.allDependency,
+        .SPM.RxSwift.dependency,
+        .Module.type(.coreInterface(interfaceModule: .managerInterface)).dependency,
+        .Module.type(.coreInterface(interfaceModule: .serviceInterface)).dependency,
+        .Module.type(.coreInterface(interfaceModule: .storageInterface)).dependency,
+        .Module.type(.coreInterface(interfaceModule: .entityInterface)).dependency,
+        .Module.type(.shared(subModule: .example)).dependency
+    ],
     resources: ["Resources/**"]
 )
