@@ -10,11 +10,14 @@ import Foundation
 public enum SharedModule: CaseIterable, ModuleInterface {
     
     case mvvmInterface
+    case diContainer
     
     public var name: String {
         switch self {
         case .mvvmInterface:
             return "MVVMInterface"
+        case .diContainer:
+            return "DIContainer"
         }
     }
     

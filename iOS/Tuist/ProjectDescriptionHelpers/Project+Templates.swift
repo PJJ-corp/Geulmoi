@@ -17,7 +17,7 @@ public extension Project {
             name: name,
             platform: platform,
             product: product,
-            bundleId: Constants.bundleID,
+            bundleId: "com.\(Constants.projectName).\(name)",
             deploymentTarget: Constants.deploymentTarget,
             infoPlist: infoPlist,
             sources: sources,
@@ -30,7 +30,7 @@ public extension Project {
             name: "\(name)Tests",
             platform: .iOS,
             product: .unitTests,
-            bundleId: Constants.bundleID,
+            bundleId: "com.\(Constants.projectName).\(name)Tests",
             infoPlist: .default,
             sources: ["Tests/**"],
             dependencies: [
