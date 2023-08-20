@@ -9,12 +9,12 @@
 import Foundation
 
 @propertyWrapper
-public struct Inject<T> {
+public struct Inject<T, Container: DIContainer> {
     
     private let implement: T
     
     public init() {
-        self.implement = DIContainer.resolve()
+        self.implement = Container.resolve()
     }
     
     public var wrappedValue: T {
