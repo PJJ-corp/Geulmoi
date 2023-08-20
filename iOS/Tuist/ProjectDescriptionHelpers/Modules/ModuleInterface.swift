@@ -11,4 +11,5 @@ public protocol ModuleInterface {
     
     var name: String { get }
     var path: String { get }
+    
 }
