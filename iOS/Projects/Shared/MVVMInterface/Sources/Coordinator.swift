@@ -17,11 +17,11 @@ public protocol Coordinator: AnyObject {
     // 코디네이터 종류
     var coordinatorType: CoordinatorType { get }
     // 하위 코디네이터 목록(있을 경우)
-    var children: [CoordinatorType: Coordinator] { get set }
+    var children: [CoordinatorType: Coordinator] { get }
     // 부모 코디네이터(있을 경우)
-    var parent: Coordinator? { get }
+    var parent: Coordinator? { get set }
     // 네비게이션 컨트롤러
-    var navigationController: UINavigationController { get set }
+    var navigationController: UINavigationController { get }
     
     func start()
 }
