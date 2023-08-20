@@ -1,22 +1,23 @@
 //
-//  HomeCoordinator.swift
-//  ProjectDescriptionHelpers
+//  AppCoordinator.swift
+//  Geulmoi
 //
-//  Created by Jihee hwang on 2023/07/01.
+//  Created by Lee, Joon Woo on 2023/08/20.
+//  Copyright © 2023 Geulmoi. All rights reserved.
 //
 
 import UIKit
 import MVVMInterface
 
-final class HomeCoordinator: Coordinator {
+final class AppCoordinator: Coordinator {
     
-    let coordinatorType = CoordinatorType.home
+    let coordinatorType = CoordinatorType.app
 
     let navigationController: UINavigationController
 
     private (set)var children: [CoordinatorType:Coordinator] = [:]
     
-    weak var parent: Coordinator?
+    weak var parent: Coordinator? = nil
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -25,4 +26,5 @@ final class HomeCoordinator: Coordinator {
     func start() {
         print("flow 시작할 뷰 적용")
     }
+
 }

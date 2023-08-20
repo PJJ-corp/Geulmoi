@@ -9,7 +9,8 @@
 import UIKit
 
 public enum CoordinatorType {
-    case example
+    case app
+    case home
 }
 
 public protocol Coordinator: AnyObject {
