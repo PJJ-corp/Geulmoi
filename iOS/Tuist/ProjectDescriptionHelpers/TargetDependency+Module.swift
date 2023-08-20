@@ -19,11 +19,15 @@ public extension TargetDependency {
             }
         }
         
-        public static var allDependency: [TargetDependency] {
-            let sharedDependency = SharedModule.allCases.compactMap { Module.type(.shared(subModule: $0)).dependency }
-            let featureDependency = getAllFeatureModules()
-            
-            return sharedDependency + featureDependency
+        public static var allDependencies: [TargetDependency] {
+            let allSharedDependencies = SharedModule.allCases.compactMap {
+                Module.type(.shared(subModule: $0)).dependency
+            }
+            let allFeatureDependencies = getAllFeatureModules()
+            let allCoreDependencies = CoreModule.allCases.compactMap { TargetDependency.Module.type(.core(subModule: $0)).dependency
+            }
+
+            return allSharedDependencies + allFeatureDependencies + allCoreDependencies
         }
     }
 }
@@ -32,7 +36,9 @@ public extension TargetDependency {
 
 private func getAllFeatureModules() -> [TargetDependency] {
     let featureModules = FeatureModule.allCases.flatMap { subModule in
-        subModule.subModules.map { TargetDependency.Module.type(.feature(subModule: subModule, layerModule: $0)).dependency }
+        subModule.subModules.map {
+            TargetDependency.Module.type(.feature(subModule: subModule, layerModule: $0)).dependency
+        }
     }
     
     return featureModules

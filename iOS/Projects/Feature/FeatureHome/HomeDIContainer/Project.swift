@@ -13,6 +13,7 @@ let project = Project.makeProject(
     product: .framework,
     packages: [],
     dependencies: [
+        .Module.type(.shared(subModule: .diContainer)).dependency
     ],
     hasTests: false
 )

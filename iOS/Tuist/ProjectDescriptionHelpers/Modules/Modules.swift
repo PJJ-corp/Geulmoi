@@ -15,8 +15,8 @@ public enum Modules {
     
     public var name: String {
         switch self {
-        case .feature(_, let layerModule):
-            return layerModule.type
+        case .feature(let subModule, let layerModule):
+            return "\(subModule.name)\(layerModule.type)"
         case .coreInterface(let interface):
             return interface.name
         case .core(let subModule):

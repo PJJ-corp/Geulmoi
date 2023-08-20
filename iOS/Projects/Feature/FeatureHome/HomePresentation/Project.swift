@@ -13,6 +13,7 @@ let project = Project.makeProject(
     product: .framework,
     packages: [],
     dependencies: [
+        .Module.type(.shared(subModule: .mvvmInterface)).dependency,
         .Module.type(.feature(subModule: .Home, layerModule: .DIContainer)).dependency,
         .Module.type(.feature(subModule: .Home, layerModule: .Coordinator)).dependency,
         .Module.type(.feature(subModule: .Home, layerModule: .UseCase)).dependency

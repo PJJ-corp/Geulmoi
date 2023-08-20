@@ -10,11 +10,8 @@ import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
     name: Modules.shared(subModule: .diContainer).name,
-    // App 타겟을 제외하면 동적/정적 framework 중 어느 하나로 설정
     product: .framework,
     packages: [],
-    dependencies: [
-        .SPM.RxSwift.dependency
-    ],
+    dependencies: [],
     hasTests: false
 )
