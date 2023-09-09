@@ -8,9 +8,15 @@
 import UIKit
 import MVVMInterface
 
-final class HomeViewController: View {
-
-    func bind(to viewModel: HomeViewModel) {
+public final class HomeViewController: UIViewController, View {
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.view.backgroundColor = .lightGray
+    }
+    
+    public func bind(to viewModel: HomeViewModel) {
         print("바인딩")
     }
 }

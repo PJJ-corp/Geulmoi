@@ -5,24 +5,27 @@
 //  Created by Jihee hwang on 2023/07/01.
 //
 
-import UIKit
 import MVVMInterface
+import HomePresentation
 
-final class HomeCoordinator: Coordinator {
+import UIKit
+
+public final class HomeCoordinator: Coordinator {
     
-    let coordinatorType = CoordinatorType.home
+    public let coordinatorType = CoordinatorType.home
 
     private let navigationController: UINavigationController
 
-    private (set)var children: [CoordinatorType:Coordinator] = [:]
+    public var children: [CoordinatorType:Coordinator] = [:]
     
-    weak var parent: Coordinator?
+    public weak var parent: Coordinator?
     
-    init(navigationController: UINavigationController) {
+    public init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
     
-    func start() {
-        print("flow 시작할 뷰 적용")
+    public func start() {
+        let viewController = HomeViewController()
+        self.navigationController.pushViewController(viewController, animated: false)
     }
 }

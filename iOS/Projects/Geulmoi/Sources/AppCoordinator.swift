@@ -6,8 +6,11 @@
 //  Copyright © 2023 Geulmoi. All rights reserved.
 //
 
-import UIKit
+import HomeCoordinator
+import HomePresentation
 import MVVMInterface
+
+import UIKit
 
 final class AppCoordinator: Coordinator {
     
@@ -24,7 +27,8 @@ final class AppCoordinator: Coordinator {
     }
     
     func start() {
-        print("flow 시작할 뷰 적용")
+        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
+        self.children[homeCoordinator.coordinatorType] = homeCoordinator
+        homeCoordinator.start()
     }
-
 }

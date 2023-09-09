@@ -9,13 +9,13 @@
 import Foundation
 import MVVMInterface
 
-final class HomeViewModel: ViewModel {
+public final class HomeViewModel: ViewModel {
     
-    struct Input { }
+    public struct Input { }
     
-    struct Output { }
+    public struct Output { }
     
-    let input = Input()
-    let output = Output()
+    public let input = Input()
+    public let output = Output()
      
 }
