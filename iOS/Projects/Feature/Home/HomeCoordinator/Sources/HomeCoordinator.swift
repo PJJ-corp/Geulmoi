@@ -18,10 +18,11 @@ public final class HomeCoordinator: Coordinator {
 
     public var children: [CoordinatorType:Coordinator] = [:]
     
-    public weak var parent: Coordinator?
+    public let parent: CoordinatorWrapper
     
-    public init(navigationController: UINavigationController) {
+    public init(navigationController: UINavigationController, parent: Coordinator?) {
         self.navigationController = navigationController
+        self.parent = CoordinatorWrapper(coordinator: parent)
     }
     
     public func start() {

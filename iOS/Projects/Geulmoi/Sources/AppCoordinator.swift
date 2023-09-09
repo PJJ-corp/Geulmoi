@@ -20,14 +20,15 @@ final class AppCoordinator: Coordinator {
 
     private (set)var children: [CoordinatorType:Coordinator] = [:]
     
-    weak var parent: Coordinator? = nil
+    let parent: CoordinatorWrapper
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, parent: Coordinator?) {
         self.navigationController = navigationController
+        self.parent = CoordinatorWrapper(coordinator: parent)
     }
     
     func start() {
-        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
+        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController, parent: self)
         self.children[homeCoordinator.coordinatorType] = homeCoordinator
         homeCoordinator.start()
     }
