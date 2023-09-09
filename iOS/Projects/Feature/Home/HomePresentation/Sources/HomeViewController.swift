@@ -17,6 +17,7 @@ public final class HomeViewController: UIViewController, View {
     }
     
     public func bind(to viewModel: HomeViewModel) {
-        print("바인딩")
+        print("바인딩 후 코디네이터로 액션 전달되는 지 확인")
+        viewModel.temporaryCallCoordinatorActionIndirectly()
     }
 }
