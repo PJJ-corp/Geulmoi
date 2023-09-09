@@ -37,7 +37,7 @@ public extension TargetDependency {
 private func getAllFeatureModules() -> [TargetDependency] {
     let featureModules = FeatureModule.allCases.flatMap { subModule in
         subModule.subModules.map {
-            TargetDependency.Module.type(.feature(subModule: subModule, layerModule: $0)).dependency
+            TargetDependency.Module.type(.feature(module: subModule, subModule: $0)).dependency
         }
     }
     

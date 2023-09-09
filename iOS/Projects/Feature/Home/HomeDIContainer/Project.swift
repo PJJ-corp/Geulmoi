@@ -9,7 +9,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: Modules.feature(subModule: .Home, layerModule: .DIContainer).name,
+    name: Modules.feature(module: .Home, subModule: .DIContainer).name,
     product: .framework,
     packages: [],
     dependencies: [

@@ -9,12 +9,14 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: Modules.feature(subModule: .Home, layerModule: .Coordinator).name,
+    name: Modules.feature(module: .Home, subModule: .Presentation).name,
     product: .framework,
     packages: [],
     dependencies: [
         .Module.type(.shared(subModule: .mvvmInterface)).dependency,
-        .Module.type(.feature(subModule: .Home, layerModule: .DIContainer)).dependency
+        .Module.type(.feature(module: .Home, subModule: .DIContainer)).dependency,
+        .Module.type(.feature(module: .Home, subModule: .Coordinator)).dependency,
+        .Module.type(.feature(module: .Home, subModule: .UseCase)).dependency
     ],
     hasTests: false
 )
