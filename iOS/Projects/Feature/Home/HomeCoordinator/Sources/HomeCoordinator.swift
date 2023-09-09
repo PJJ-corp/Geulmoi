@@ -26,6 +26,15 @@ public final class HomeCoordinator: Coordinator {
     
     public func start() {
         let viewController = HomeViewController()
+        let viewModel = HomeViewModel(navigator: self)
+        viewController.bind(to: viewModel)
         self.navigationController.pushViewController(viewController, animated: false)
+    }
+}
+
+extension HomeCoordinator: HomeViewModelNavigation {
+    
+    public func nextScene() {
+        print("코디네이터에서 메시지 확인")
     }
 }
