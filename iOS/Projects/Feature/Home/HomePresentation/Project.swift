@@ -15,7 +15,6 @@ let project = Project.makeProject(
     dependencies: [
         .Module.type(.shared(subModule: .mvvmInterface)).dependency,
         .Module.type(.feature(module: .Home, subModule: .DIContainer)).dependency,
-        .Module.type(.feature(module: .Home, subModule: .Coordinator)).dependency,
         .Module.type(.feature(module: .Home, subModule: .UseCase)).dependency
     ],
     hasTests: false
