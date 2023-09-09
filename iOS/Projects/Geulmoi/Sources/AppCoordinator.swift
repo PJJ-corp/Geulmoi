@@ -13,7 +13,7 @@ final class AppCoordinator: Coordinator {
     
     let coordinatorType = CoordinatorType.app
 
-    let navigationController: UINavigationController
+    private let navigationController: UINavigationController
 
     private (set)var children: [CoordinatorType:Coordinator] = [:]
     

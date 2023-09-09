@@ -12,7 +12,7 @@ final class HomeCoordinator: Coordinator {
     
     let coordinatorType = CoordinatorType.home
 
-    let navigationController: UINavigationController
+    private let navigationController: UINavigationController
 
     private (set)var children: [CoordinatorType:Coordinator] = [:]
     
