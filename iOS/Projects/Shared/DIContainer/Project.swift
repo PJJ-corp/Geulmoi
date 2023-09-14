@@ -2,17 +2,16 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by Jihee hwang on 2023/07/01.
+//  Created by Lee, Joon Woo on 2023/08/11.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: Modules.feature(subModule: .Home, layerModule: .DIContainer).name,
+    name: Modules.shared(subModule: .diContainer).name,
     product: .framework,
     packages: [],
-    dependencies: [
-    ],
+    dependencies: [],
     hasTests: false
 )

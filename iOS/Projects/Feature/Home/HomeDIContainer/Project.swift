@@ -2,19 +2,18 @@
 //  Project.swift
 //  ProjectDescriptionHelpers
 //
-//  Created by Lee, Joon Woo on 2023/06/22.
+//  Created by Jihee hwang on 2023/07/01.
 //
 
 import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: Modules.shared(subModule: .example).name,
-    // App 타겟을 제외하면 동적/정적 framework 중 어느 하나로 설정
+    name: Modules.feature(module: .Home, subModule: .DIContainer).name,
     product: .framework,
     packages: [],
     dependencies: [
-        .SPM.RxSwift.dependency
+        .Module.type(.shared(subModule: .diContainer)).dependency
     ],
     hasTests: false
 )

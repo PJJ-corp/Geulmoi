@@ -9,12 +9,12 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeProject(
-    name: Modules.feature(subModule: .Home, layerModule: .UseCase).name,
+    name: Modules.feature(module: .Home, subModule: .UseCase).name,
     product: .framework,
     packages: [],
     dependencies: [
-        .Module.type(.feature(subModule: .Home, layerModule: .DIContainer)).dependency,
-        .Module.type(.feature(subModule: .Home, layerModule: .Repository)).dependency
+        .Module.type(.feature(module: .Home, subModule: .DIContainer)).dependency,
+        .Module.type(.feature(module: .Home, subModule: .Repository)).dependency
     ],
     hasTests: false
 )

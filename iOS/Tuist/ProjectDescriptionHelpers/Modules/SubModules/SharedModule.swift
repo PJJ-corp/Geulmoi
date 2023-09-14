@@ -9,18 +9,21 @@ import Foundation
 
 public enum SharedModule: CaseIterable, ModuleInterface {
     
-    case example
+    case mvvmInterface
+    case diContainer
     
     public var name: String {
         switch self {
-        case .example:
-            return "SharedExampleModule"
+        case .mvvmInterface:
+            return "MVVMInterface"
+        case .diContainer:
+            return "DIContainer"
         }
     }
     
     public var path: String {
         switch self {
-        case .example:
+        default:
             return "Projects/Shared/\(name)"
         }
     }

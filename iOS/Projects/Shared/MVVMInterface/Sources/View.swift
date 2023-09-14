@@ -7,9 +7,8 @@
 
 import Foundation
 
-struct SomeStruct {
+public protocol View: AnyObject {
+    associatedtype ViewModelType: ViewModel
     
-    func main() {
-        print("Doing nothing")
-    }
+    func bind(to viewModel: ViewModelType)
 }

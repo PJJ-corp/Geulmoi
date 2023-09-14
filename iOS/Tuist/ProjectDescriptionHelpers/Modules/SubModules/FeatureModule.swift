@@ -7,7 +7,20 @@
 
 import Foundation
 
+// MARK: Feature 모듈 정의
 public enum FeatureModule: CaseIterable, ModuleInterface {
+ 
+    public enum SubModule: CaseIterable {
+        case DIContainer
+        case Coordinator
+        case Presentation
+        case UseCase
+        case Repository
+        
+        var name: String {
+            return "\(self)"
+        }
+    }
 
     case Home
     
@@ -18,32 +31,14 @@ public enum FeatureModule: CaseIterable, ModuleInterface {
         }
     }
 
+    /// 모듈 경로 예시: Projects/Feature/Home
     public var path: String {
-        return featurePath + "\(name)/\(name)"
+        return "Projects/Feature/\(name)"
     }
     
-    public var subModules: [FeatureSubModule] {
-        return FeatureSubModule.allCases
+    /// Feature 하위 모듈(Coordinator, DIContainer, Presentation, Repository, UseCase)
+    public var subModules: [SubModule] {
+        return SubModule.allCases
     }
 
-}
-
-// MARK: - FeaturePath
-
-private let featurePath = "Projects/Feature/Feature"
-
-// MARK: - FeatureSubModule
-
-public enum FeatureSubModule: CaseIterable {
-
-    case DIContainer
-    case Coordinator
-    case Presentation
-    case UseCase
-    case Repository
-
-    var type: String {
-        return "\(self)"
-    }
-    
 }
