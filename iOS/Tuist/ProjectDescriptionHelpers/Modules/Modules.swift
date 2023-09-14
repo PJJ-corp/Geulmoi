@@ -9,7 +9,6 @@ import Foundation
 
 public enum Modules {
     case feature(module: FeatureModule, subModule: FeatureModule.SubModule)
-    case coreInterface(interfaceModule: CoreInterfaceModule)
     case core(subModule: CoreModule)
     case shared(subModule: SharedModule)
     
@@ -18,8 +17,6 @@ public enum Modules {
         case .feature(let module, let subModule):
             // 모듈이름 + 서브모듈 이름(ex. Home + Coordinator = HomeCoordinator)
             return "\(module.name)\(subModule.name)"
-        case .coreInterface(let interface):
-            return interface.name
         case .core(let subModule):
             return subModule.name
         case .shared(let subModule):
@@ -31,8 +28,6 @@ public enum Modules {
         switch self {
         case .feature(let module, let subModule):
             return "\(module.path)/\(module.name)\(subModule.name)"
-        case .coreInterface(let interface):
-            return interface.path
         case .core(let subModule):
             return subModule.path
         case .shared(let subModule):
