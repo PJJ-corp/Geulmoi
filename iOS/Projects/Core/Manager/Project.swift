@@ -13,7 +13,9 @@ let project: Project = .makeProject(
     product: .framework,
     packages: [],
     dependencies: [
-        .SPM.RxSwift.dependency
+        .SPM.RxSwift.dependency,
+        .Module.type(.core(subModule: .service)).dependency,
+        .Module.type(.core(subModule: .entity)).dependency
     ],
     hasTests: false
 )
