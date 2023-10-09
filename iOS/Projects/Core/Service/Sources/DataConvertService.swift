@@ -8,13 +8,13 @@
 
 import UIKit
 
-struct DataConvertService {
+public struct DataConvertService {
     
-    static func convertToUIImage(from data: Data) -> UIImage? {
+    public static func convertToUIImage(from data: Data) -> UIImage? {
         return .init(data: data)
     }
     
-    static func convertToCGImage(from data: Data) -> CGImage? {
+    public static func convertToCGImage(from data: Data) -> CGImage? {
         let image: UIImage? = DataConvertService.convertToUIImage(from: data)
         
         return image?.cgImage
