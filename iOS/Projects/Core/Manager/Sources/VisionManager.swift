@@ -34,6 +34,10 @@ final public class VisionManager {
         do {
             guard let vnTextRequest else { return }
             
+            defer {
+                self.vnRequestHandlers.removeAll()
+            }
+            
             // Request 실행
             try self.vnRequestHandlers.forEach {
                 try $0.perform([vnTextRequest])
