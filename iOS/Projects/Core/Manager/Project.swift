@@ -17,5 +17,5 @@ let project: Project = .makeProject(
         .Module.type(.core(subModule: .service)).dependency,
         .Module.type(.core(subModule: .entity)).dependency
     ],
-    hasTests: false
+    hasTests: true
 )
