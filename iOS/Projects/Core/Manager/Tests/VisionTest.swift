@@ -8,8 +8,12 @@
 
 import XCTest
 @testable import Manager
+import UIKit
+import RxSwift
 
 final class VisionTest: XCTestCase {
+    
+    let disposeBag: DisposeBag = .init()
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -20,11 +24,55 @@ final class VisionTest: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        var count: Int = 0
+        
+        let firstExp: XCTestExpectation = .init(description: "test1 success")
+        let secondExp: XCTestExpectation = .init(description: "test2 success")
+        let thirdExp: XCTestExpectation = .init(description: "test3 success")
+        
+        let visionManager: VisionManager = .init()
+        visionManager.convertedTextRelay
+            .subscribe(with: self) { (_, text) in
+                print("Text: \n\(text)")
+                
+                switch count {
+                case 0:
+                    count += 1
+                    firstExp.fulfill()
+                    
+                case 1:
+                    count += 1
+                    secondExp.fulfill()
+                    
+                case 2:
+                    count += 1
+                    thirdExp.fulfill()
+                    
+                default:
+                    break
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        guard let firstImage: UIImage = .init(named: "test1"),
+              let secondImage: UIImage = .init(named: "test2"),
+              let thirdImage: UIImage = .init(named: "test3") else {
+            XCTExpectFailure("Can't load Image")
+            
+            return
+        }
+        
+        guard let firstData: Data = firstImage.pngData(),
+              let secondData: Data = secondImage.pngData(),
+              let thirdData: Data = thirdImage.pngData() else {
+            XCTExpectFailure("Can't convert to Data")
+            
+            return
+        }
+        
+        visionManager.executeVisionOcr(with: [firstData, secondData, thirdData])
+        
+        wait(for: [firstExp, secondExp, thirdExp], timeout: 10)
     }
 
     func testPerformanceExample() throws {
