@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import Manager
+@testable import Resources
 import UIKit
 import RxSwift
 
@@ -54,9 +55,9 @@ final class VisionTest: XCTestCase {
             }
             .disposed(by: disposeBag)
         
-        let firstImage: UIImage = ManagerAsset.test1.image
-        let secondImage: UIImage = ManagerAsset.test2.image
-        let thirdImage: UIImage = ManagerAsset.test3.image
+        let firstImage: UIImage = ResourcesAsset.test1.image
+        let secondImage: UIImage = ResourcesAsset.test2.image
+        let thirdImage: UIImage = ResourcesAsset.test3.image
         
         guard let firstData: Data = firstImage.pngData(),
               let secondData: Data = secondImage.pngData(),
