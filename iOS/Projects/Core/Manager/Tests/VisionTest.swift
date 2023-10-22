@@ -54,13 +54,9 @@ final class VisionTest: XCTestCase {
             }
             .disposed(by: disposeBag)
         
-        guard let firstImage: UIImage = .init(named: "test1"),
-              let secondImage: UIImage = .init(named: "test2"),
-              let thirdImage: UIImage = .init(named: "test3") else {
-            XCTExpectFailure("Can't load Image")
-            
-            return
-        }
+        let firstImage: UIImage = ManagerAsset.test1.image
+        let secondImage: UIImage = ManagerAsset.test2.image
+        let thirdImage: UIImage = ManagerAsset.test3.image
         
         guard let firstData: Data = firstImage.pngData(),
               let secondData: Data = secondImage.pngData(),

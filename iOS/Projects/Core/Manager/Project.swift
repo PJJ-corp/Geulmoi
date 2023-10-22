@@ -17,5 +17,6 @@ let project: Project = .makeProject(
         .Module.type(.core(subModule: .service)).dependency,
         .Module.type(.core(subModule: .entity)).dependency
     ],
+    resources: ["Resources/**"],
     hasTests: true
 )
