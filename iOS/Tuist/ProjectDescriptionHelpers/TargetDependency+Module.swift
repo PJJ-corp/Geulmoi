@@ -23,11 +23,18 @@ public extension TargetDependency {
             let allSharedDependencies = SharedModule.allCases.compactMap {
                 Module.type(.shared(subModule: $0)).dependency
             }
+            
+            let allCoreDependencies = CoreModule.allCases.compactMap {
+                TargetDependency.Module.type(.core(subModule: $0)).dependency
+            }
+            
             let allFeatureDependencies = getAllFeatureModules()
-            let allCoreDependencies = CoreModule.allCases.compactMap { TargetDependency.Module.type(.core(subModule: $0)).dependency
+            
+            let allDesignSystemDependencies = DesignSystemModule.allCases.compactMap {
+                Module.type(.designSystem(subModule: $0)).dependency
             }
 
-            return allSharedDependencies + allFeatureDependencies + allCoreDependencies
+            return allSharedDependencies + allCoreDependencies + allFeatureDependencies + allDesignSystemDependencies
         }
     }
 }

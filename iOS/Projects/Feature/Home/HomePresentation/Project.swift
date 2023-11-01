@@ -16,6 +16,7 @@ let project = Project.makeProject(
         .Module.type(.shared(subModule: .mvvmInterface)).dependency,
         .Module.type(.feature(module: .Home, subModule: .DIContainer)).dependency,
         .Module.type(.feature(module: .Home, subModule: .UseCase)).dependency,
+        .Module.type(.designSystem(subModule: .designSystem)).dependency,
         .SPM.SnapKit.dependency
     ],
     hasTests: false

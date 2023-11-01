@@ -8,12 +8,15 @@
 import Foundation
 
 public enum Modules {
+    case designSystem(subModule: DesignSystemModule)
     case feature(module: FeatureModule, subModule: FeatureModule.SubModule)
     case core(subModule: CoreModule)
     case shared(subModule: SharedModule)
     
     public var name: String {
         switch self {
+        case .designSystem(let subModule):
+            return subModule.name
         case .feature(let module, let subModule):
             // 모듈이름 + 서브모듈 이름(ex. Home + Coordinator = HomeCoordinator)
             return "\(module.name)\(subModule.name)"
@@ -26,6 +29,8 @@ public enum Modules {
     
     public var path: String {
         switch self {
+        case .designSystem(let subModule):
+            return subModule.path
         case .feature(let module, let subModule):
             return "\(module.path)/\(module.name)\(subModule.name)"
         case .core(let subModule):
