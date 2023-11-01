@@ -11,11 +11,15 @@ public extension TargetDependency {
     
     enum SPM {
         case RxSwift
+        case SnapKit
         
         public var dependency: TargetDependency {
             switch self {
             case .RxSwift:
                 return .external(name: "RxSwift")
+                
+            case .SnapKit:
+                return .external(name: "SnapKit")
             }
         }
     }
