@@ -12,6 +12,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import AVFoundation
+import Photos
 
 public final class HomeViewController: UIViewController, View {
     
@@ -28,14 +29,14 @@ public final class HomeViewController: UIViewController, View {
     
     private lazy var albumButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .black
+        button.backgroundColor = .darkGray
         button.layer.cornerRadius = 25
         return button
     }()
     
     private lazy var switchCameraButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .red
+        button.backgroundColor = .darkGray
         button.layer.cornerRadius = 25
         return button
     }()
@@ -50,37 +51,25 @@ public final class HomeViewController: UIViewController, View {
     // MARK: - Camera Property
     
     private var previewLayer = AVCaptureVideoPreviewLayer()
+    private var photoSettings = AVCapturePhotoSettings()
     private var captureSession = AVCaptureSession()
-    private var output = AVCaptureVideoDataOutput()
+    private var output = AVCapturePhotoOutput()
     private var camera: AVCaptureDevice?
     private var input: AVCaptureInput?
     
     // MARK: - Property
     
     private let disposeBag = DisposeBag()
-    private let viewModel: HomeViewModel?
     
     private var isCaptureSessionSetup = false
     private var isPreviewSetup = false
     private var takePicture = false
     private var usesFrontCamera = false
     
-    private let sessionQueue = DispatchQueue(
-        label: "CaptureHelperQueue",
-        qos: .background
-    )
+    private let sessionQueue = DispatchQueue.global(qos: .background)
     
     // MARK: - Initializer
-    
-    public init(viewModel: HomeViewModel = .init()) {
-        self.viewModel = viewModel // TODO: DIContainer 사용
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
@@ -88,7 +77,7 @@ public final class HomeViewController: UIViewController, View {
         
         configureUI()
         setupCaptureSession()
-        bind(to: viewModel ?? .init())
+        viewBind()
     }
     
     // MARK: - Function
@@ -96,7 +85,9 @@ public final class HomeViewController: UIViewController, View {
     public func bind(to viewModel: HomeViewModel) {
         print("바인딩 후 코디네이터로 액션 전달되는 지 확인")
         viewModel.temporaryCallCoordinatorActionIndirectly()
-        
+    }
+    
+    private func viewBind() {
         switchCameraButton
             .rx
             .tap
@@ -126,11 +117,11 @@ public final class HomeViewController: UIViewController, View {
             .asDriver()
             .throttle(.milliseconds(3))
             .drive(with: self, onNext: { owner, _ in
-                owner.takePicture = true
+                owner.shoot()
             })
             .disposed(by: disposeBag)
     }
-
+    
     private func setupCaptureSession() {
         captureSession.beginConfiguration()
         captureSession.sessionPreset = .photo
@@ -164,6 +155,8 @@ public final class HomeViewController: UIViewController, View {
             fatalError("could not create input device")
         }
         
+        input = cameraInput
+        
         guard captureSession.canAddInput(cameraInput) else {
             fatalError("could not add camera input to capture session")
         }
@@ -178,6 +171,17 @@ public final class HomeViewController: UIViewController, View {
         
         captureSession.addOutput(output)
         output.connections.first?.videoOrientation = .portrait
+    }
+    
+    private func photoCaptureSettings() -> AVCapturePhotoSettings {
+        var settings = AVCapturePhotoSettings()
+        settings.isHighResolutionPhotoEnabled = true
+        
+        settings = output.availablePhotoCodecTypes.contains(.hevc) ?
+        AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc]) :
+        AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
+                               
+        return settings
     }
     
     private func startCamera() {
@@ -227,19 +231,65 @@ public final class HomeViewController: UIViewController, View {
     }
     
     private func shoot() {
-
+        let settings = photoCaptureSettings()
+        output.capturePhoto(with: settings, delegate: self)
     }
-
-    private func stopCamera() {
-        guard captureSession.isRunning else { return }
+    
+    private func savePhoto(_ photo: AVCapturePhoto) {
+        guard let data = photo.fileDataRepresentation() else { return }
         
-        sessionQueue.async { [weak self] in
-            guard let self else { return }
-            self.captureSession.stopRunning()
-        }
+        PHPhotoLibrary
+            .shared()
+            .performChanges({
+                let creationRequest = PHAssetCreationRequest.forAsset()
+                creationRequest.addResource(
+                    with: .photo,
+                    data: data,
+                    options: nil)
+            }, completionHandler: nil)
+    }
+    
+    
+    private func setPhotoLibraryAuthAlert() {
+        let alert = UIAlertController(
+            title: "사진 접근을 허용해주세요.",
+            message: "허용 이후 사진을 저장할 수 있습니다.",
+            preferredStyle: .alert
+        )
+
+        let getAuthAction = UIAlertAction(
+            title: "설정으로 이동",
+            style: .default,
+            handler: { UIAlertAction in
+                guard let appSettings = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+        })
+
+        alert.addAction(getAuthAction)
+        present(alert, animated: true, completion: nil)
     }
 
 }
+
+// MARK: - AVCapturePhotoCaptureDelegate
+
+extension HomeViewController: AVCapturePhotoCaptureDelegate {
+    
+    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard error == nil else { return }
+        
+        PHPhotoLibrary.requestAuthorization ({ [weak self] status in
+            switch status{
+            case .authorized:
+                self?.savePhoto(photo)
+            default:
+                self?.setPhotoLibraryAuthAlert()
+            }
+        })
+    }
+        
+}
+
 
 // MARK: - configure UI
 
