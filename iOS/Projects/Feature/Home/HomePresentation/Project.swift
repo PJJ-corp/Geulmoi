@@ -17,6 +17,9 @@ let project = Project.makeProject(
         .Module.type(.feature(module: .Home, subModule: .DIContainer)).dependency,
         .Module.type(.feature(module: .Home, subModule: .UseCase)).dependency,
         .Module.type(.designSystem(subModule: .designSystem)).dependency,
+        .SPM.RxCocoa.dependency,
+        .SPM.RxRelay.dependency,
+        .SPM.RxSwift.dependency,
         .SPM.SnapKit.dependency
     ],
     hasTests: false
