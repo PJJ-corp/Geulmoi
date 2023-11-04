@@ -13,7 +13,7 @@ import RxCocoa
 
 public protocol HomeViewModelNavigation: AnyObject {
 
-    func showPhotoPreview()
+    func showPhotoPreview(with photoData: Data)
 }
 
 public final class HomeViewModel: ViewModel {
@@ -46,7 +46,7 @@ public final class HomeViewModel: ViewModel {
         input.photoData
             .asDriver(onErrorDriveWith: .empty())
             .drive(with: self, onNext: { owner, data in
-                owner.navigator?.nextScene()
+                owner.navigator?.showPhotoPreview(with: data)
             })
             .disposed(by: disposeBag)
     }

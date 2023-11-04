@@ -9,10 +9,21 @@
 import UIKit
 import MVVMInterface
 import SnapKit
-import Photos
+import RxSwift
+import RxCocoa
 
 public final class PhotoPreviewViewController: UIViewController, View {
+    
+    private lazy var photoPreview: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
 
+    // MARK: - Property
+    
+    private let disposeBag = DisposeBag()
+    
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
@@ -21,10 +32,28 @@ public final class PhotoPreviewViewController: UIViewController, View {
         configureUI()
     }
     
+    // MARK: - Initializer
+
+    public init(with photo: Data) {
+        super.init(nibName: nil, bundle: nil)
+
+        showPreview(photo)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Function
     
     public func bind(to viewModel: PhotoPreviewViewModel) {
-        print("바인딩 후 코디네이터로 액션 전달되는 지 확인")
+        
+    }
+    
+    private func showPreview(_ data: Data) {
+        guard let image = UIImage(data: data) else { return }
+        photoPreview.image = image
     }
     
 }
@@ -34,7 +63,11 @@ public final class PhotoPreviewViewController: UIViewController, View {
 extension PhotoPreviewViewController {
     
     private func configureUI() {
+        view.addSubview(photoPreview)
         
+        photoPreview.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
 }

@@ -35,10 +35,11 @@ public final class HomeCoordinator: Coordinator {
 
 extension HomeCoordinator: HomeViewModelNavigation {
     
-    public func showPhotoPreview() {
+    public func showPhotoPreview(with photoData: Data) {
         let viewModel = PhotoPreviewViewModel(navigator: self)
-        let viewController = PhotoPreviewViewController()
+        let viewController = PhotoPreviewViewController(with: photoData)
         viewController.bind(to: viewModel)
+        self.navigationController.pushViewController(viewController, animated: false)
     }
 }
 
