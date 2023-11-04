@@ -1,5 +1,5 @@
 //
-//  PhotoConfirmViewController.swift
+//  PhotoPreviewViewController.swift
 //  HomePresentation
 //
 //  Created by Jihee hwang on 2023/11/03.
@@ -11,7 +11,7 @@ import MVVMInterface
 import SnapKit
 import Photos
 
-public final class PhotoConfirmViewController: UIViewController, View {
+public final class PhotoPreviewViewController: UIViewController, View {
 
     // MARK: - Life Cycle
     
@@ -23,16 +23,15 @@ public final class PhotoConfirmViewController: UIViewController, View {
     
     // MARK: - Function
     
-    public func bind(to viewModel: HomeViewModel) {
+    public func bind(to viewModel: PhotoPreviewViewModel) {
         print("바인딩 후 코디네이터로 액션 전달되는 지 확인")
-        viewModel.temporaryCallCoordinatorActionIndirectly()
     }
     
 }
 
 // MARK: - configure UI
 
-extension PhotoConfirmViewController {
+extension PhotoPreviewViewController {
     
     private func configureUI() {
         

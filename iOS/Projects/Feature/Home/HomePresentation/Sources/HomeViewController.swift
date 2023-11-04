@@ -66,6 +66,7 @@ public final class HomeViewController: UIViewController, View {
     
     // MARK: - Property
     
+    private var viewModel: HomeViewModel?
     private let disposeBag = DisposeBag()
     
     private var isCaptureSessionSetup = false
@@ -77,6 +78,16 @@ public final class HomeViewController: UIViewController, View {
     
     // MARK: - Initializer
 
+    public init(viewModel: HomeViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
@@ -84,14 +95,44 @@ public final class HomeViewController: UIViewController, View {
         
         configureUI()
         setupCaptureSession()
-        viewBind()
     }
     
     // MARK: - Function
     
     public func bind(to viewModel: HomeViewModel) {
-        print("바인딩 후 코디네이터로 액션 전달되는 지 확인")
-        viewModel.temporaryCallCoordinatorActionIndirectly()
+        
+        switchCameraButton
+            .rx
+            .tap
+            .do(onNext: { [weak self] in
+                self?.usesFrontCamera.toggle()
+            })
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(with: self, onNext: { owner, _ in
+                owner.flipCamera()
+                owner.isCaptureSessionSetup = false
+            })
+            .disposed(by: disposeBag)
+        
+        albumButton
+            .rx
+            .tap
+            .asDriver()
+            .throttle(.milliseconds(3))
+            .drive(with: self, onNext: { owner, _ in
+                owner.present(owner.picker, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        shotButton
+            .rx
+            .tap
+            .asDriver()
+            .throttle(.milliseconds(3))
+            .drive(with: self, onNext: { owner, _ in
+                owner.shoot()
+            })
+            .disposed(by: disposeBag)
     }
     
     private func viewBind() {
@@ -242,18 +283,10 @@ public final class HomeViewController: UIViewController, View {
         output.capturePhoto(with: settings, delegate: self)
     }
     
-    private func savePhoto(_ photo: AVCapturePhoto) {
+    private func passPhotoToNextVC(_ photo: AVCapturePhoto) {
         guard let data = photo.fileDataRepresentation() else { return }
         
-        PHPhotoLibrary
-            .shared()
-            .performChanges({
-                let creationRequest = PHAssetCreationRequest.forAsset()
-                creationRequest.addResource(
-                    with: .photo,
-                    data: data,
-                    options: nil)
-            }, completionHandler: nil)
+        viewModel?.input.photoData.accept(data)
     }
     
     
@@ -288,7 +321,7 @@ extension HomeViewController: AVCapturePhotoCaptureDelegate {
         PHPhotoLibrary.requestAuthorization ({ [weak self] status in
             switch status{
             case .authorized:
-                self?.savePhoto(photo)
+                self?.passPhotoToNextVC(photo)
             default:
                 self?.setPhotoLibraryAuthAlert()
             }

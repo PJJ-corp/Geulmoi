@@ -26,8 +26,8 @@ public final class HomeCoordinator: Coordinator {
     }
     
     public func start() {
-        let viewController = HomeViewController()
         let viewModel = HomeViewModel(navigator: self)
+        let viewController = HomeViewController(viewModel: viewModel)
         viewController.bind(to: viewModel)
         self.navigationController.pushViewController(viewController, animated: false)
     }
@@ -35,7 +35,16 @@ public final class HomeCoordinator: Coordinator {
 
 extension HomeCoordinator: HomeViewModelNavigation {
     
-    public func nextScene() {
+    public func showPhotoPreview() {
+        let viewModel = PhotoPreviewViewModel(navigator: self)
+        let viewController = PhotoPreviewViewController()
+        viewController.bind(to: viewModel)
+    }
+}
+
+extension HomeCoordinator: PhotoPreviewViewModelNavigation {
+    
+    public func showTransferView() {
         print("코디네이터에서 메시지 확인")
     }
 }

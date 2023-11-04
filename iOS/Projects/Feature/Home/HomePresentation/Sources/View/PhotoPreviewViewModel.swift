@@ -1,8 +1,8 @@
 //
-//  HomeViewModel.swift
+//  PhotoPreviewViewModel.swift
 //  HomePresentation
 //
-//  Created by Lee, Joon Woo on 2023/08/20.
+//  Created by Jihee hwang on 2023/11/04.
 //  Copyright © 2023 HomePresentation. All rights reserved.
 //
 
@@ -11,12 +11,12 @@ import MVVMInterface
 import RxSwift
 import RxCocoa
 
-public protocol HomeViewModelNavigation: AnyObject {
+public protocol PhotoPreviewViewModelNavigation: AnyObject {
 
-    func showPhotoPreview()
+    func showTransferView()
 }
 
-public final class HomeViewModel: ViewModel {
+public final class PhotoPreviewViewModel: ViewModel {
     
     public struct Input {
         let photoData = PublishRelay<Data>()
@@ -29,12 +29,12 @@ public final class HomeViewModel: ViewModel {
     
     // MARK: - Property
     
-    private weak var navigator: HomeViewModelNavigation?
+    private weak var navigator: PhotoPreviewViewModelNavigation?
     private let disposeBag = DisposeBag()
     
     // MARK: - Initializer
     
-    public init(navigator: HomeViewModelNavigation? = nil) {
+    public init(navigator: PhotoPreviewViewModelNavigation? = nil) {
         self.navigator = navigator
         
         bind()
@@ -43,12 +43,7 @@ public final class HomeViewModel: ViewModel {
     // MARK: - Function
     
     private func bind() {
-        input.photoData
-            .asDriver(onErrorDriveWith: .empty())
-            .drive(with: self, onNext: { owner, data in
-                owner.navigator?.nextScene()
-            })
-            .disposed(by: disposeBag)
+
     }
     
 }
