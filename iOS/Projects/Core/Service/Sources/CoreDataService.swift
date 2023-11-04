@@ -10,21 +10,21 @@ import Foundation
 import CoreData
 import Resources
 
-final class CoreDataService {
+public final class CoreDataService {
     
     private var persistentContainer: NSPersistentContainer?
     private var entity: NSEntityDescription?
     
-    var isInitialized: Bool {
+    public var isInitialized: Bool {
         return ((entity != nil) && (persistentContainer != nil))
     }
     
-    init(with xcdatamodeld: String, entityName: String) {
+    public init(with xcdatamodeld: String, entityName: String) {
         self.loadPersistentStore(with: xcdatamodeld, entityName: entityName)
     }
     
     @discardableResult
-    func saveData(with dataDic: [String: Any]) -> Bool {
+    public func saveData(with dataDic: [String: Any]) -> Bool {
         guard let persistentContainer, let entity else {
             print("Essetensial properties not initialized")
             return false
@@ -46,7 +46,7 @@ final class CoreDataService {
         }
     }
     
-    func fetchData<T: NSManagedObject>() -> [T] {
+    public func fetchData<T: NSManagedObject>() -> [T] {
         guard let persistentContainer, let request = T.fetchRequest() as? NSFetchRequest<T> else {
             print("Essetensial properties not initialized")
             return []
@@ -63,9 +63,9 @@ final class CoreDataService {
     }
     
     @discardableResult
-    func deleteData(object: NSManagedObject) -> Bool {
+    public func deleteData(object: NSManagedObject) -> Bool {
         guard let persistentContainer else {
-            print("Not exist container"
+            print("Not exist container")
             return false
         }
         
