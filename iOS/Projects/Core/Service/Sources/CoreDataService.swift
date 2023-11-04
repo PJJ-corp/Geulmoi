@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import Resources
 
 final class CoreDataService {
     
@@ -22,10 +23,11 @@ final class CoreDataService {
     
 //    lazy var entity: NSEntityDescription? = .entity(forEntityName: "ScanedWriting", in: self.container.viewContext)
     
-    func saveData(with dataDic: [String: Any]) {
+    @discardableResult
+    func saveData(with dataDic: [String: Any]) -> Bool {
         guard let entity else {
             print("NSEntityDescription not initialized")
-            return
+            return false
         }
         
         let context: NSManagedObjectContext = persistentContainer.viewContext
@@ -36,13 +38,41 @@ final class CoreDataService {
         
         do {
             try context.save()
+            return true
             
         } catch {
             print("Error: \(error.localizedDescription)")
+            return false
         }
     }
     
+    func fetchData<T: NSManagedObject>() -> [T] {
+        guard let request = T.fetchRequest() as? NSFetchRequest<T> else {
+            return []
+        }
+        
+        do {
+            let fetchResult = try persistentContainer.viewContext.fetch(request)
+            return fetchResult
+            
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
+        }
+    }
     
+    @discardableResult
+    func deleteData(object: NSManagedObject) -> Bool {
+        persistentContainer.viewContext.delete(object)
+        
+        do {
+            try persistentContainer.viewContext.save()
+            return true
+            
+        } catch {
+            return false
+        }
+    }
 }
 
 private extension CoreDataService {
