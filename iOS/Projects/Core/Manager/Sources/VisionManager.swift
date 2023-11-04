@@ -17,19 +17,19 @@ final public class VisionManager {
     private var vnTextRequest: VNRecognizeTextRequest?
     private var vnRequestHandlers: [VNImageRequestHandler] = []
     
-    public let convertedTextRelay: BehaviorRelay<String> = .init(value: "")
+    public let convertedTextRelay: PublishRelay<String> = .init()
     
     init() {
         self.configureVnRequest()
         self.setVnRequestOptions()
     }
     
-    public func executeVisionOcr(with datas: [Data]) {
-        self.vnRequestHandlers = datas.compactMap {
+    public func executeVisionOcr(with data: [Data]) {
+        self.vnRequestHandlers = data.compactMap {
             return .init(data: $0)
         }
         
-        guard vnRequestHandlers.count == datas.count else { return }
+        guard vnRequestHandlers.count == data.count else { return }
         
         do {
             guard let vnTextRequest else { return }
