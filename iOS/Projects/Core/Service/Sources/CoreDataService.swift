@@ -12,21 +12,21 @@ import Resources
 
 final class CoreDataService {
     
-    private let persistentContainer: NSPersistentContainer
+    private var persistentContainer: NSPersistentContainer?
     private var entity: NSEntityDescription?
     
-    init(with xcdatamodeld: String, entityName: String) {
-//        self.persistentContainer = .init(name: "ScanModel")
-        self.persistentContainer = .init(name: xcdatamodeld)
-        self.loadPersistentStore(with: entityName)
+    var isInitialized: Bool {
+        return ((entity != nil) && (persistentContainer != nil))
     }
     
-//    lazy var entity: NSEntityDescription? = .entity(forEntityName: "ScanedWriting", in: self.container.viewContext)
+    init(with xcdatamodeld: String, entityName: String) {
+        self.loadPersistentStore(with: xcdatamodeld, entityName: entityName)
+    }
     
     @discardableResult
     func saveData(with dataDic: [String: Any]) -> Bool {
-        guard let entity else {
-            print("NSEntityDescription not initialized")
+        guard let persistentContainer, let entity else {
+            print("Essetensial properties not initialized")
             return false
         }
         
@@ -47,7 +47,8 @@ final class CoreDataService {
     }
     
     func fetchData<T: NSManagedObject>() -> [T] {
-        guard let request = T.fetchRequest() as? NSFetchRequest<T> else {
+        guard let persistentContainer, let request = T.fetchRequest() as? NSFetchRequest<T> else {
+            print("Essetensial properties not initialized")
             return []
         }
         
@@ -63,6 +64,11 @@ final class CoreDataService {
     
     @discardableResult
     func deleteData(object: NSManagedObject) -> Bool {
+        guard let persistentContainer else {
+            print("Not exist container"
+            return false
+        }
+        
         persistentContainer.viewContext.delete(object)
         
         do {
@@ -77,15 +83,26 @@ final class CoreDataService {
 
 private extension CoreDataService {
     
-    func loadPersistentStore(with entityName: String) {
-        persistentContainer.loadPersistentStores(completionHandler: { (storeDescription, error) in
+    func loadPersistentStore(with xcdatamodeld:String, entityName: String) {
+        guard let modelUrl = Bundle.init(identifier: "com.Geulmoi.Resources")?.url(forResource: xcdatamodeld, withExtension: "momd") else {
+            print("Error loading model from bundle")
+            return
+        }
+
+        guard let objectModel = NSManagedObjectModel(contentsOf: modelUrl) else {
+            print("Error initializing model from: \(modelUrl)")
+            return
+        }
+        
+        persistentContainer = .init(name: xcdatamodeld, managedObjectModel: objectModel)
+        persistentContainer?.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error {
                 // FIXME: Log 구현 필요
-                print("Unresolved error \(error.localizedDescription)")
+                print("Load persistentStore error: \(error.localizedDescription)")
                 return
             }
             
-            self.entity = .entity(forEntityName: entityName, in: self.persistentContainer.viewContext)
+            self.entity = .entity(forEntityName: entityName, in: self.persistentContainer!.viewContext)
         })
     }
 }
