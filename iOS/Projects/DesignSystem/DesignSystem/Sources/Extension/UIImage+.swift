@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIImage {
+public extension UIImage {
     
     static let album = UIImage.init(named: "album")
     static let change = UIImage.init(named: "change")

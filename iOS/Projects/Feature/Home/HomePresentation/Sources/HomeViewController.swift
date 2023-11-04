@@ -22,21 +22,28 @@ public final class HomeViewController: UIViewController, View {
     
     private lazy var shotButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .white
+        button.backgroundColor = .geulmoiKhaki
+        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.shadowOffset = .init(width: 0, height: 0)
+        button.layer.borderWidth = 10
+        button.layer.shadowRadius = 5
+        button.layer.shadowOpacity = 0.2
         button.layer.cornerRadius = 45
         return button
     }()
     
     private lazy var albumButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .darkGray
+        button.setImage(.album, for: .normal)
+        button.backgroundColor = .geulmoiLightBrown
         button.layer.cornerRadius = 25
         return button
     }()
     
     private lazy var switchCameraButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .darkGray
+        button.setImage(.change, for: .normal)
+        button.backgroundColor = .geulmoiLightBrown
         button.layer.cornerRadius = 25
         return button
     }()
@@ -296,7 +303,7 @@ extension HomeViewController: AVCapturePhotoCaptureDelegate {
 extension HomeViewController {
     
     private func configureUI() {
-        view.backgroundColor = .lightGray
+        view.backgroundColor = .geulmoiIvory
         
         view.addSubview(cameraContainerView)
         view.addSubview(shotButton)

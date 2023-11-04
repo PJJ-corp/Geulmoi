@@ -7,13 +7,13 @@
 
 import UIKit
 
-extension UIColor {
+public extension UIColor {
     
-    static let khaki = UIColor(named: "khaki")
-    static let brown = UIColor(named: "brown")
-    static let lightBrown = UIColor(named: "lightBrown")
-    static let beige = UIColor(named: "beige")
-    static let ivory = UIColor(named: "ivory")
-    static let lightGray = UIColor(named: "lightGray")
+    static let geulmoiKhaki = UIColor(named: "geulmoiKhaki")
+    static let geulmoiBrown = UIColor(named: "geulmoiBrown")
+    static let geulmoiLightBrown = UIColor(named: "geulmoiLightBrown")
+    static let geulmoiBeige = UIColor(named: "geulmoiBeige")
+    static let geulmoiIvory = UIColor(named: "geulmoiIvory")
+    static let geulmoiLightGray = UIColor(named: "geulmoiLightGray")
     
 }
