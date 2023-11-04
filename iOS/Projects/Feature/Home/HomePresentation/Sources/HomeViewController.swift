@@ -24,8 +24,8 @@ public final class HomeViewController: UIViewController, View {
         let button = UIButton()
         button.backgroundColor = .geulmoiKhaki
         button.layer.borderColor = UIColor.white.cgColor
-        button.layer.shadowOffset = .init(width: 0, height: 0)
         button.layer.borderWidth = 10
+        button.layer.shadowOffset = .init(width: 0, height: 0)
         button.layer.shadowRadius = 5
         button.layer.shadowOpacity = 0.2
         button.layer.cornerRadius = 45
@@ -344,7 +344,8 @@ extension HomeViewController {
         view.addSubview(switchCameraButton)
 
         cameraContainerView.snp.makeConstraints {
-            $0.top.width.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.width.equalToSuperview()
             $0.bottom.equalTo(shotButton.snp.top).offset(-40)
         }
         

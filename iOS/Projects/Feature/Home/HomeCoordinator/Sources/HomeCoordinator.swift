@@ -7,6 +7,7 @@
 
 import MVVMInterface
 import HomePresentation
+import DesignSystem
 
 import UIKit
 
@@ -23,6 +24,7 @@ public final class HomeCoordinator: Coordinator {
     public init(navigationController: UINavigationController, parent: Coordinator?) {
         self.navigationController = navigationController
         self.parent = CoordinatorWrapper(coordinator: parent)
+        setUpNavigationBar()
     }
     
     public func start() {
@@ -30,6 +32,10 @@ public final class HomeCoordinator: Coordinator {
         let viewController = HomeViewController(viewModel: viewModel)
         viewController.bind(to: viewModel)
         self.navigationController.pushViewController(viewController, animated: false)
+    }
+    
+    private func setUpNavigationBar() {
+        navigationController.navigationBar.backgroundColor = .geulmoiIvory
     }
 }
 

@@ -19,6 +19,14 @@ public final class PhotoPreviewViewController: UIViewController, View {
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
+    
+    private lazy var confirmButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .geulmoiKhaki
+        button.setImage(.check, for: .normal)
+        button.layer.cornerRadius = 35
+        return button
+    }()
 
     // MARK: - Property
     
@@ -63,10 +71,21 @@ public final class PhotoPreviewViewController: UIViewController, View {
 extension PhotoPreviewViewController {
     
     private func configureUI() {
-        view.addSubview(photoPreview)
+        view.backgroundColor = .geulmoiIvory
         
+        view.addSubview(photoPreview)
+        view.addSubview(confirmButton)
+
         photoPreview.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.width.equalToSuperview()
+            $0.bottom.equalTo(confirmButton.snp.top).offset(-50)
+        }
+        
+        confirmButton.snp.makeConstraints {
+            $0.size.equalTo(70)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(50)
         }
     }
     
