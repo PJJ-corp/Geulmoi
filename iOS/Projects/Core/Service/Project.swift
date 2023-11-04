@@ -18,5 +18,5 @@ let project: Project = .makeProject(
         .Module.type(.core(subModule: .entity)).dependency,
         .Module.type(.shared(subModule: .resources)).dependency
     ],
-    hasTests: false
+    hasTests: true
 )
