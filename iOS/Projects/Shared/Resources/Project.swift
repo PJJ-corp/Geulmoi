@@ -9,13 +9,10 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project: Project = .makeProject(
-    name: Modules.core(subModule: .service).name,
+    name: Modules.shared(subModule: .resources).name,
     product: .framework,
     packages: [],
-    dependencies: [
-        .SPM.RxSwift.dependency,
-        .SPM.RxRelay.dependency,
-        .Module.type(.core(subModule: .entity)).dependency
-    ],
+    dependencies: [],
+    resources: "Resources/**",
     hasTests: false
 )

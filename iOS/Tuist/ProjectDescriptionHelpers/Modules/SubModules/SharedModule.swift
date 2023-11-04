@@ -11,6 +11,7 @@ public enum SharedModule: CaseIterable, ModuleInterface {
     
     case mvvmInterface
     case diContainer
+    case resources
     
     public var name: String {
         switch self {
@@ -18,6 +19,8 @@ public enum SharedModule: CaseIterable, ModuleInterface {
             return "MVVMInterface"
         case .diContainer:
             return "DIContainer"
+        case .resources:
+            return "Resources"
         }
     }
     
