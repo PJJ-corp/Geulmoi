@@ -23,4 +23,16 @@ public struct DataConvertService {
         
         return image?.cgImage
     }
+    
+    public static func convertToJson<T: Codable>(from model: T) -> [String: Any]? {
+        let data: Data? = try? JSONEncoder().encode(model)
+        
+        if let data {
+            let json: [String: Any]? = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            return json
+            
+        } else {
+            return nil
+        }
+    }
 }
