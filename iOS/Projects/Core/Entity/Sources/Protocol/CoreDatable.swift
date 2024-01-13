@@ -7,9 +7,7 @@
 
 import Foundation
 
-struct SomeStruct {
+protocol CoreDatable {
     
-    func main() {
-        print("Doing nothing")
-    }
+    var uuid: String { get }
 }
