@@ -8,9 +8,15 @@
 
 import Foundation
 
-struct ScanedModel: CoreDatable {
+public struct ScanedModel: CoreDatable {
     
-    let uuid: String
-    let imageData: Data
-    let text: String
+    public let uuid: String
+    public let imageData: Data
+    public let text: String
+    
+    public init(uuid: String, imageData: Data, text: String) {
+        self.uuid = uuid
+        self.imageData = imageData
+        self.text = text
+    }
 }

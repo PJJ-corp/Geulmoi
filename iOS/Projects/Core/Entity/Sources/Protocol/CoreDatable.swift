@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CoreDatable {
+public protocol CoreDatable {
     
     var uuid: String { get }
 }
