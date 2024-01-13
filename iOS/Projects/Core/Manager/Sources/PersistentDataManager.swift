@@ -43,11 +43,12 @@ public final class PersistentDataManager {
         }
     }
     
-    public func saveCoreData<T: Codable>(with type: CoreDataType, model: T) {
-        guard let service: CoreDataService = coreDataServices[type], let json = DataConvertService.convertToJson(from: model) else {
+    public func saveCoreData<T: CoreDatable>(with type: CoreDataType, model: T) {
+        guard let service: CoreDataService = coreDataServices[type] else {
             return
         }
         
+        let json: [String: Any] = self.convertDataToDictionary(with: type, model: model)
         let isSaved: Bool = service.saveData(with: json)
         
         if isSaved {
@@ -104,6 +105,27 @@ public final class PersistentDataManager {
             service.deleteData(object: deleteData[0])
             // FIXME: Log
             print("Delete data successly")
+        }
+    }
+}
+
+private extension PersistentDataManager {
+    
+    // Serialization으로 json 형태로 변환하면 Data 타입이 String 타입으로 변환되어 Manager 객체에 전용 변환 함수 구현
+    func convertDataToDictionary<T: CoreDatable>(with type: CoreDataType, model: T) -> [String: Any] {
+        var json: [String: Any] = [:]
+        
+        switch type {
+        case .scanedWriting:
+            guard let convedtedModel = model as? ScanedModel else {
+                return json
+            }
+            
+            json["uuid"] = convedtedModel.uuid
+            json["imageData"] = convedtedModel.imageData
+            json["text"] = convedtedModel.text
+            
+            return json
         }
     }
 }
