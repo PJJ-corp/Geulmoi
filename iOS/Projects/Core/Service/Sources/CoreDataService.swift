@@ -24,7 +24,7 @@ public final class CoreDataService {
     }
     
     @discardableResult
-    public func saveData(with dataDic: [String: Any]) -> Bool {
+    public func saveData(with dataDic: [String: Any]) -> Bool { // 공용 사용을 위해 JSON 형태로 데이터를 받도록 구현
         guard let persistentContainer, let entity else {
             print("Essetensial properties not initialized")
             return false

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ScanedModel: CoreDatable {
+public struct ScanedModel: CoreDatable, Codable {
     
     public let uuid: String
     public let imageData: Data
