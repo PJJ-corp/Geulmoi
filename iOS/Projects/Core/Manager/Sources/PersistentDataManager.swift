@@ -73,7 +73,9 @@ public final class PersistentDataManager {
                 
                 self.fetchedDatas[type] = fetchedData
                 fetchedData.forEach {
-                    guard let uuid = $0.uuid, let imageData = $0.imageData, let text = $0.text else {
+                    guard let uuid = $0.uuid,
+                          let imageData = $0.imageData,
+                          let text = $0.text else {
                         // FIXME: Log
                         print("Saved data does not have essential property value")
                         return
@@ -94,13 +96,13 @@ public final class PersistentDataManager {
     }
     
     public func removeCoreData<T: CoreDataModel>(with type: CoreDataType, model: T) {
-        guard let service: CoreDataService = coreDataServices[type], let datas = self.fetchedDatas[type] else {
+        guard let service: CoreDataService = coreDataServices[type], let data = self.fetchedDatas[type] else {
             return
         }
         
         switch type {
         case .scanedWriting:
-            let deleteData: [ScanedWriting] = datas
+            let deleteData: [ScanedWriting] = data
                 .compactMap { $0 as? ScanedWriting }
                 .filter { $0.uuid == model.uuid }
             
