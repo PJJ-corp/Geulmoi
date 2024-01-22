@@ -62,7 +62,7 @@ final class PersistentDataTest: XCTestCase {
         PersistentDataManager.shared.saveCoreData(with: .scanedWriting, model: data2)
         PersistentDataManager.shared.saveCoreData(with: .scanedWriting, model: data3)
         
-        let fetchedData: [ScannedData] = PersistentDataManager.shared.fetchCoreData(with: .scanedWriting)
+        let fetchedData: [ScannedData] = PersistentDataManager.shared.GetCoreData(with: .scanedWriting)
             .compactMap { $0 as? ScannedData }
         var count: Int = 0
         
@@ -82,9 +82,9 @@ final class PersistentDataTest: XCTestCase {
         }
         
         let dataIndex1 = fetchedData[1]
-        PersistentDataManager.shared.removeCoreData(with: .scanedWriting, model: fetchedData[1])
+        PersistentDataManager.shared.deleteCoreData(with: .scanedWriting, model: fetchedData[1])
         
-        let fetchedAfterRemoveData: [ScannedData] = PersistentDataManager.shared.fetchCoreData(with: .scanedWriting)
+        let fetchedAfterRemoveData: [ScannedData] = PersistentDataManager.shared.GetCoreData(with: .scanedWriting)
             .compactMap { $0 as? ScannedData }
         if (fetchedAfterRemoveData.count == 2) {
             let filtered = fetchedAfterRemoveData

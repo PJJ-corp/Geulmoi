@@ -59,7 +59,7 @@ public final class PersistentDataManager {
         }
     }
     
-    public func fetchCoreData(with type: CoreDataType) -> [CoreDataModel] {
+    public func GetCoreData(with type: CoreDataType) -> [CoreDataModel] {
         guard let service: CoreDataService = coreDataServices[type] else {
             return []
         }
@@ -95,7 +95,7 @@ public final class PersistentDataManager {
         }
     }
     
-    public func removeCoreData<T: CoreDataModel>(with type: CoreDataType, model: T) {
+    public func deleteCoreData<T: CoreDataModel>(with type: CoreDataType, model: T) {
         guard let service: CoreDataService = coreDataServices[type], let data = self.fetchedDatas[type] else {
             return
         }
