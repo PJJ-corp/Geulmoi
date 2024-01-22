@@ -28,7 +28,16 @@ final class PersistentDataTest: XCTestCase {
 
     }
 
-    func testExample() throws {
+    /*
+     사용자가 찍은 책 사진을 String으로 변환까지 마쳐 하나의 데이터 타입으로 변경했을 때,
+     해당 데이터를 PersistentManager에 saveCoreData로 전달하면
+     CoreData에 해당 데이터를 저장한다.
+     
+     CoreData에 저장된 데이터가 있을 경우,
+     removeCoreData를 호출하여 특정 데이터를 삭제하거나
+     fetchCoreData를 호출하여 전체 데이터를 CoreData에서 가져올 수 있다.
+     */
+    func testPersistentManagerCRUD() throws {
         let saveExp: XCTestExpectation = .init(description: "save success")
         let fetchExp: XCTestExpectation = .init(description: "fetch success")
         let removeExp: XCTestExpectation = .init(description: "remove success")
