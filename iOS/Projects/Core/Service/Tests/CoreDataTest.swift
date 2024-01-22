@@ -22,7 +22,16 @@ final class CoreDataTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    /*
+     PersistentManager에서 데이터타입을,
+     CoreDataService에 saveCoreData로 전달하면
+     CoreData에 해당 데이터를 저장한다.
+     
+     CoreData에 저장된 데이터가 있을 경우,
+     removeCoreData를 호출하여 특정 데이터를 삭제하거나
+     fetchCoreData를 호출하여 전체 데이터를 CoreData에서 가져올 수 있다.
+     */
+    func testCoreDataServiceCRUD() throws {
         let saveExp: XCTestExpectation = .init(description: "save success")
         let fetchExp: XCTestExpectation = .init(description: "fetch success")
         let deleteExp: XCTestExpectation = .init(description: "delete success")
@@ -35,23 +44,31 @@ final class CoreDataTest: XCTestCase {
             return
         }
         
-        let isSaved: Bool = cdService.saveData(with: ["text": "IsTest", "imageData": data])
-        if isSaved {
+        do {
+            try cdService.saveData(with: ["text": "IsTest", "imageData": data])
             saveExp.fulfill()
-        } else {
+            
+        } catch {
             XCTExpectFailure("Can not save")
         }
         
-        let swData: [ScanedWriting] = cdService.fetchData()
-        if swData.isEmpty {
-            XCTExpectFailure("Can not fetch")
-        }
+        var swData: [ScanedWriting] = []
         
-        if let text = swData.first?.text, let _ = swData.first?.imageData {
-            XCTAssertTrue(text == "IsTest")
-            print("Text: \(text)")
-            fetchExp.fulfill()
-        } else {
+        do {
+            swData = try cdService.fetchData()
+            if swData.isEmpty {
+                XCTExpectFailure("Can not fetch")
+            }
+            
+            if let text = swData.first?.text, let _ = swData.first?.imageData {
+                print("Text: \(text)")
+                XCTAssertTrue(text == "IsTest")
+                fetchExp.fulfill()
+            } else {
+                XCTExpectFailure("Can not fetch")
+            }
+            
+        } catch {
             XCTExpectFailure("Can not fetch")
         }
         
@@ -60,17 +77,23 @@ final class CoreDataTest: XCTestCase {
             return
         }
         
-        let isDelete: Bool = cdService.deleteData(object: managedObject)
-        if isDelete {
+        do {
+            try cdService.deleteData(object: managedObject)
             deleteExp.fulfill()
-        } else {
+            
+        } catch {
             XCTExpectFailure("Can not delete")
         }
         
-        let deletedData: [ScanedWriting] = cdService.fetchData()
-        if deletedData.isEmpty {
-            fetchAfterDeleteExp.fulfill()
-        } else {
+        do {
+            let deletedData: [ScanedWriting] = try cdService.fetchData()
+            if deletedData.isEmpty {
+                fetchAfterDeleteExp.fulfill()
+            } else {
+                XCTExpectFailure("Can not deleted")
+            }
+            
+        } catch {
             XCTExpectFailure("Can not deleted")
         }
         

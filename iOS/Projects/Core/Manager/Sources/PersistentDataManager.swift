@@ -49,13 +49,13 @@ public final class PersistentDataManager {
         }
         
         let json: [String: Any] = self.convertDataToDictionary(with: type, model: model)
-        let isSaved: Bool = service.saveData(with: json)
         
-        if isSaved {
-            // FIXME: Log
-            print("Save Data to CoreData is Succeed")
-        } else {
-            print("Save Data to CoreData is Failed")
+        do {
+            try service.saveData(with: json)
+            
+        } catch {
+            // FIXME: OSLog
+            print("Error: \(error.localizedDescription)")
         }
     }
     
@@ -67,21 +67,29 @@ public final class PersistentDataManager {
         switch type {
         case .scanedWriting:
             var convertedModel: [ScannedData] = []
-            let fetchedData: [ScanedWriting] = service.fetchData()
             
-            self.fetchedDatas[type] = fetchedData
-            fetchedData.forEach {
-                guard let uuid = $0.uuid, let imageData = $0.imageData, let text = $0.text else {
-                    // FIXME: Log
-                    print("Saved data does not have essential property value")
-                    return
+            do {
+                let fetchedData: [ScanedWriting] = try service.fetchData()
+                
+                self.fetchedDatas[type] = fetchedData
+                fetchedData.forEach {
+                    guard let uuid = $0.uuid, let imageData = $0.imageData, let text = $0.text else {
+                        // FIXME: Log
+                        print("Saved data does not have essential property value")
+                        return
+                    }
+                    
+                    let model: ScannedData = .init(uuid: uuid, imageData: imageData, text: text)
+                    convertedModel.append(model)
                 }
                 
-                let model: ScannedData = .init(uuid: uuid, imageData: imageData, text: text)
-                convertedModel.append(model)
+                return convertedModel
+                
+            } catch {
+                // FIXME: OSLog
+                print("Error: \(error.localizedDescription)")
+                return convertedModel
             }
-            
-            return convertedModel
         }
     }
     
@@ -102,9 +110,13 @@ public final class PersistentDataManager {
                 return
             }
             
-            service.deleteData(object: deleteData[0])
-            // FIXME: Log
-            print("Delete data successly")
+            do {
+                try service.deleteData(object: deleteData[0])
+                
+            } catch {
+                // FIXME: OSLog
+                print("Error: \(error.localizedDescription)")
+            }
         }
     }
 }

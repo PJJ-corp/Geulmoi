@@ -23,11 +23,10 @@ public final class CoreDataService {
         self.loadPersistentStore(with: xcdatamodeld, entityName: entityName)
     }
     
-    @discardableResult
-    public func saveData(with dataDic: [String: Any]) -> Bool { // 공용 사용을 위해 JSON 형태로 데이터를 받도록 구현
+    public func saveData(with dataDic: [String: Any]) throws { // 공용 사용을 위해 JSON 형태로 데이터를 받도록 구현
         guard let persistentContainer, let entity else {
             print("Essetensial properties not initialized")
-            return false
+            return
         }
         
         let context: NSManagedObjectContext = persistentContainer.viewContext
@@ -36,48 +35,28 @@ public final class CoreDataService {
             modelData.setValue($0.value, forKey: $0.key)
         }
         
-        do {
-            try context.save()
-            return true
-            
-        } catch {
-            print("Error: \(error.localizedDescription)")
-            return false
-        }
+        try context.save()
     }
     
-    public func fetchData<T: NSManagedObject>() -> [T] {
+    public func fetchData<T: NSManagedObject>() throws -> [T] {
         guard let persistentContainer, let request = T.fetchRequest() as? NSFetchRequest<T> else {
             print("Essetensial properties not initialized")
             return []
         }
         
-        do {
-            let fetchResult = try persistentContainer.viewContext.fetch(request)
-            return fetchResult
-            
-        } catch {
-            print("Error: \(error.localizedDescription)")
-            return []
-        }
+        let fetchResult = try persistentContainer.viewContext.fetch(request)
+        return fetchResult
     }
     
-    @discardableResult
-    public func deleteData(object: NSManagedObject) -> Bool {
+    public func deleteData(object: NSManagedObject) throws {
         guard let persistentContainer else {
             print("Not exist container")
-            return false
+            return
         }
         
         persistentContainer.viewContext.delete(object)
         
-        do {
-            try persistentContainer.viewContext.save()
-            return true
-            
-        } catch {
-            return false
-        }
+        try persistentContainer.viewContext.save()
     }
 }
 
