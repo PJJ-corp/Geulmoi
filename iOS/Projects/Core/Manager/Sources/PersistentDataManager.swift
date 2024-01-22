@@ -43,7 +43,7 @@ public final class PersistentDataManager {
         }
     }
     
-    public func saveCoreData<T: CoreDatable>(with type: CoreDataType, model: T) {
+    public func saveCoreData<T: CoreDataModel>(with type: CoreDataType, model: T) {
         guard let service: CoreDataService = coreDataServices[type] else {
             return
         }
@@ -59,14 +59,14 @@ public final class PersistentDataManager {
         }
     }
     
-    public func fetchCoreData(with type: CoreDataType) -> [CoreDatable] {
+    public func fetchCoreData(with type: CoreDataType) -> [CoreDataModel] {
         guard let service: CoreDataService = coreDataServices[type] else {
             return []
         }
         
         switch type {
         case .scanedWriting:
-            var convertedModel: [ScanedModel] = []
+            var convertedModel: [ScannedData] = []
             let fetchedData: [ScanedWriting] = service.fetchData()
             
             self.fetchedDatas[type] = fetchedData
@@ -77,7 +77,7 @@ public final class PersistentDataManager {
                     return
                 }
                 
-                let model: ScanedModel = .init(uuid: uuid, imageData: imageData, text: text)
+                let model: ScannedData = .init(uuid: uuid, imageData: imageData, text: text)
                 convertedModel.append(model)
             }
             
@@ -85,7 +85,7 @@ public final class PersistentDataManager {
         }
     }
     
-    public func removeCoreData<T: CoreDatable>(with type: CoreDataType, model: T) {
+    public func removeCoreData<T: CoreDataModel>(with type: CoreDataType, model: T) {
         guard let service: CoreDataService = coreDataServices[type], let datas = self.fetchedDatas[type] else {
             return
         }
@@ -112,12 +112,12 @@ public final class PersistentDataManager {
 private extension PersistentDataManager {
     
     // Serialization으로 json 형태로 변환하면 Data 타입이 String 타입으로 변환되어 Manager 객체에 전용 변환 함수 구현
-    func convertDataToDictionary<T: CoreDatable>(with type: CoreDataType, model: T) -> [String: Any] {
+    func convertDataToDictionary<T: CoreDataModel>(with type: CoreDataType, model: T) -> [String: Any] {
         var json: [String: Any] = [:]
         
         switch type {
         case .scanedWriting:
-            guard let convedtedModel = model as? ScanedModel else {
+            guard let convedtedModel = model as? ScannedData else {
                 return json
             }
             

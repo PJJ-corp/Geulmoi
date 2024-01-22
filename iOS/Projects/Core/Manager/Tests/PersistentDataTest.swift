@@ -54,16 +54,16 @@ final class PersistentDataTest: XCTestCase {
             return
         }
         
-        let data1: ScanedModel = .init(uuid: uuid1, imageData: firstData, text: "Data1")
-        let data2: ScanedModel = .init(uuid: uuid2, imageData: secondData, text: "Data2")
-        let data3: ScanedModel = .init(uuid: uuid3, imageData: thirdData, text: "Data3")
+        let data1: ScannedData = .init(uuid: uuid1, imageData: firstData, text: "Data1")
+        let data2: ScannedData = .init(uuid: uuid2, imageData: secondData, text: "Data2")
+        let data3: ScannedData = .init(uuid: uuid3, imageData: thirdData, text: "Data3")
         
         PersistentDataManager.shared.saveCoreData(with: .scanedWriting, model: data1)
         PersistentDataManager.shared.saveCoreData(with: .scanedWriting, model: data2)
         PersistentDataManager.shared.saveCoreData(with: .scanedWriting, model: data3)
         
-        let fetchedData: [ScanedModel] = PersistentDataManager.shared.fetchCoreData(with: .scanedWriting)
-            .compactMap { $0 as? ScanedModel }
+        let fetchedData: [ScannedData] = PersistentDataManager.shared.fetchCoreData(with: .scanedWriting)
+            .compactMap { $0 as? ScannedData }
         var count: Int = 0
         
         if (fetchedData.count == 3) {
@@ -84,8 +84,8 @@ final class PersistentDataTest: XCTestCase {
         let dataIndex1 = fetchedData[1]
         PersistentDataManager.shared.removeCoreData(with: .scanedWriting, model: fetchedData[1])
         
-        let fetchedAfterRemoveData: [ScanedModel] = PersistentDataManager.shared.fetchCoreData(with: .scanedWriting)
-            .compactMap { $0 as? ScanedModel }
+        let fetchedAfterRemoveData: [ScannedData] = PersistentDataManager.shared.fetchCoreData(with: .scanedWriting)
+            .compactMap { $0 as? ScannedData }
         if (fetchedAfterRemoveData.count == 2) {
             let filtered = fetchedAfterRemoveData
                 .filter { $0.uuid == dataIndex1.uuid }
