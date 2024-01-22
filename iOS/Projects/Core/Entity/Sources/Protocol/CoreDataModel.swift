@@ -7,9 +7,7 @@
 
 import Foundation
 
-struct SomeStruct {
+public protocol CoreDataModel {
     
-    func main() {
-        print("Doing nothing")
-    }
+    var uuid: String { get }
 }

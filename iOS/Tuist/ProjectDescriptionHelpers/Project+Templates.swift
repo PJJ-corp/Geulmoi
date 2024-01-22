@@ -10,6 +10,7 @@ public extension Project {
                             dependencies: [TargetDependency],
                             sources: SourceFilesList = ["Sources/**"],
                             resources: ResourceFileElements? = nil,
+                            coreDataModels: [CoreDataModel] = [],
                             hasTests: Bool = true
                             ) -> Project {
         
@@ -23,8 +24,8 @@ public extension Project {
             infoPlist: infoPlist,
             sources: sources,
             resources: resources,
-            dependencies: dependencies
-
+            dependencies: dependencies,
+            coreDataModels: coreDataModels
         )
         
         // 2. Test 타겟 생성

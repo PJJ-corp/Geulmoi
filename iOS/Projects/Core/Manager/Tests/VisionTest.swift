@@ -24,7 +24,12 @@ final class VisionTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    /*
+     사용자가 책 내용을 사진으로 찍었을 때
+     찍은 사진 이미지를 VisionManager로 전달하면
+     OCR을 통해 사진 이미지 속의 글자를 String으로 변환하여 준다
+     */
+    func testVisionManagerConvertingImageToText() throws {
         var count: Int = 0
         
         let firstExp: XCTestExpectation = .init(description: "test1 success")

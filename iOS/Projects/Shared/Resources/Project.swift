@@ -14,5 +14,6 @@ let project: Project = .makeProject(
     packages: [],
     dependencies: [],
     resources: "Resources/**",
+    coreDataModels: [.init("Resources/ScanModel.xcdatamodeld")],
     hasTests: false
 )
