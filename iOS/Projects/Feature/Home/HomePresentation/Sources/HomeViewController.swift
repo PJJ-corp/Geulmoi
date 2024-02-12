@@ -11,14 +11,12 @@ import DesignSystem
 import SnapKit
 import RxSwift
 import RxCocoa
-import AVFoundation
-import Photos
 
 public final class HomeViewController: UIViewController, View {
     
     // MARK: - Views
     
-    private lazy var cameraContainerView = UIView()
+    private let cameraContainerView = UIView()
     
     private lazy var shotButton: UIButton = {
         let button = UIButton()
@@ -52,35 +50,26 @@ public final class HomeViewController: UIViewController, View {
         let picker = UIImagePickerController()
         picker.sourceType = .photoLibrary
         picker.allowsEditing = true
+        picker.delegate = self
         return picker
     }()
-    
-    // MARK: - Camera Property
-    
-    private var previewLayer = AVCaptureVideoPreviewLayer()
-    private var photoSettings = AVCapturePhotoSettings()
-    private var captureSession = AVCaptureSession()
-    private var output = AVCapturePhotoOutput()
-    private var camera: AVCaptureDevice?
-    private var input: AVCaptureInput?
     
     // MARK: - Property
     
     private var viewModel: HomeViewModel?
     private let disposeBag = DisposeBag()
     
-    private var isCaptureSessionSetup = false
-    private var isPreviewSetup = false
-    private var takePicture = false
-    private var usesFrontCamera = false
-    
-    private let sessionQueue = DispatchQueue.global(qos: .background)
+    private var cameraManager: CameraManagable?
     
     // MARK: - Initializer
 
-    public init(viewModel: HomeViewModel) {
+    public init(
+        viewModel: HomeViewModel,
+        cameraManager: CameraManagable = CameraManager()
+    ) {
         super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
+        self.cameraManager = cameraManager
     }
     
     @available(*, unavailable)
@@ -94,31 +83,34 @@ public final class HomeViewController: UIViewController, View {
         super.viewDidLoad()
         
         configureUI()
-        setupCaptureSession()
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        cameraManager?.prepareCapturing(with: cameraContainerView)
     }
     
     // MARK: - Function
     
     public func bind(to viewModel: HomeViewModel) {
-        
         switchCameraButton
             .rx
             .tap
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
             .do(onNext: { [weak self] in
-                self?.usesFrontCamera.toggle()
+                self?.cameraManager?.changeUseFrontCameraOrNot()
             })
             .asDriver(onErrorDriveWith: .empty())
             .drive(with: self, onNext: { owner, _ in
-                owner.flipCamera()
-                owner.isCaptureSessionSetup = false
+                owner.cameraManager?.flipCamera()
             })
             .disposed(by: disposeBag)
         
         albumButton
             .rx
             .tap
-            .asDriver()
-            .throttle(.milliseconds(3))
+            .throttle(.milliseconds(3), scheduler: MainScheduler.instance)
+            .asDriver(onErrorDriveWith: .empty())
             .drive(with: self, onNext: { owner, _ in
                 owner.present(owner.picker, animated: true)
             })
@@ -127,168 +119,25 @@ public final class HomeViewController: UIViewController, View {
         shotButton
             .rx
             .tap
-            .asDriver()
-            .throttle(.milliseconds(3))
-            .drive(with: self, onNext: { owner, _ in
-                owner.shoot()
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func viewBind() {
-        switchCameraButton
-            .rx
-            .tap
-            .do(onNext: { [weak self] in
-                self?.usesFrontCamera.toggle()
-            })
+            .throttle(.milliseconds(3), scheduler: MainScheduler.instance)
             .asDriver(onErrorDriveWith: .empty())
             .drive(with: self, onNext: { owner, _ in
-                owner.flipCamera()
-                owner.isCaptureSessionSetup = false
-            })
-            .disposed(by: disposeBag)
-        
-        albumButton
-            .rx
-            .tap
-            .asDriver()
-            .throttle(.milliseconds(3))
-            .drive(with: self, onNext: { owner, _ in
-                owner.present(owner.picker, animated: true)
-            })
-            .disposed(by: disposeBag)
-        
-        shotButton
-            .rx
-            .tap
-            .asDriver()
-            .throttle(.milliseconds(3))
-            .drive(with: self, onNext: { owner, _ in
-                owner.shoot()
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func setupCaptureSession() {
-        captureSession.beginConfiguration()
-        captureSession.sessionPreset = .photo
-        captureSession.automaticallyConfiguresCaptureDeviceForWideColor = true
-        
-        sessionQueue.async { [weak self] in
-            guard let self = self else { return }
-            
-            if !self.isCaptureSessionSetup { self.setupInput() }
-            
-            self.startCamera()
-        }
-        
-        setupOutput()
-        captureSession.commitConfiguration()
-        isCaptureSessionSetup = true
-    }
-    
-    private func setupInput() {
-        let cameraPosition: AVCaptureDevice.Position = usesFrontCamera ? .front : .back
-
-        guard let device = AVCaptureDevice.default(
-            .builtInWideAngleCamera,
-            for: .video,
-            position: cameraPosition
-        ) else {
-            fatalError("no camera")
-        }
-       
-        guard let cameraInput = try? AVCaptureDeviceInput(device: device) else {
-            fatalError("could not create input device")
-        }
-        
-        input = cameraInput
-        
-        guard captureSession.canAddInput(cameraInput) else {
-            fatalError("could not add camera input to capture session")
-        }
-        
-        captureSession.addInput(cameraInput)
-    }
-    
-    private func setupOutput() {
-        guard captureSession.canAddOutput(output) else {
-            fatalError("could not add video output")
-        }
-        
-        captureSession.addOutput(output)
-        output.connections.first?.videoOrientation = .portrait
-    }
-    
-    private func photoCaptureSettings() -> AVCapturePhotoSettings {
-        var settings = AVCapturePhotoSettings()
-        settings.isHighResolutionPhotoEnabled = true
-        
-        settings = output.availablePhotoCodecTypes.contains(.hevc) ?
-        AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc]) :
-        AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
-                               
-        return settings
-    }
-    
-    private func startCamera() {
-        if !captureSession.isRunning {
-            sessionQueue.async { [weak self] in
-                let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-                
-                switch status {
-                case .notDetermined, .restricted, .denied:
-                    self?.captureSession.stopRunning()
-                    
-                case .authorized:
-                    self?.tryToSetupPreview()
-                    self?.captureSession.startRunning()
-                default:
-                    fatalError("unknown default reached. Check code.")
+                owner.cameraManager?.shoot { photoOutputResultType in
+                    switch photoOutputResultType {
+                    case .success(let photo):
+                        owner.passPhotoToNextVC(photo)
+                    case .fail:
+                        owner.setPhotoLibraryAuthAlert()
+                    }
                 }
-            }
-        }
+            })
+            .disposed(by: disposeBag)
     }
     
-    private func tryToSetupPreview() {
-        if !isPreviewSetup {
-            setupPreview()
-            isPreviewSetup = true
-        }
+    private func passPhotoToNextVC(_ photo: Data) {
+        viewModel?.input.photoData.accept(photo)
+        cameraManager?.endCapturing()
     }
-    
-    private func setupPreview() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            
-            self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-            self.previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            self.previewLayer.frame = self.cameraContainerView.bounds
-            self.cameraContainerView.layer.addSublayer(self.previewLayer)
-        }
-    }
-    
-    private func flipCamera() {
-        guard let input else { return }
-        
-        captureSession.beginConfiguration()
-        captureSession.removeInput(input)
-        setupInput()
-        captureSession.commitConfiguration()
-    }
-    
-    private func shoot() {
-        let settings = photoCaptureSettings()
-        output.capturePhoto(with: settings, delegate: self)
-    }
-    
-    private func passPhotoToNextVC(_ photo: AVCapturePhoto) {
-        guard let data = photo.fileDataRepresentation() else { return }
-        
-        viewModel?.input.photoData.accept(data)
-    }
-    
     
     private func setPhotoLibraryAuthAlert() {
         let alert = UIAlertController(
@@ -311,25 +160,17 @@ public final class HomeViewController: UIViewController, View {
 
 }
 
-// MARK: - AVCapturePhotoCaptureDelegate
+extension HomeViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-extension HomeViewController: AVCapturePhotoCaptureDelegate {
-    
-    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard error == nil else { return }
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        guard let data = image.pngData() else { return }
         
-        PHPhotoLibrary.requestAuthorization ({ [weak self] status in
-            switch status{
-            case .authorized:
-                self?.passPhotoToNextVC(photo)
-            default:
-                self?.setPhotoLibraryAuthAlert()
-            }
-        })
+        viewModel?.input.photoData.accept(data)
+       
+        dismiss(animated: true, completion: nil)
     }
-        
 }
-
 
 // MARK: - configure UI
 
