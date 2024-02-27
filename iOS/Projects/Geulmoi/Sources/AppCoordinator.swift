@@ -28,8 +28,10 @@ final class AppCoordinator: Coordinator {
     }
     
     func start() {
-        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController, parent: self)
-        self.children[homeCoordinator.coordinatorType] = homeCoordinator
-        homeCoordinator.start()
+//        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController, parent: self)
+//        self.children[homeCoordinator.coordinatorType] = homeCoordinator
+//        homeCoordinator.start()
+        
+        self.navigationController.pushViewController(MainTabBarController(), animated: false)
     }
 }
